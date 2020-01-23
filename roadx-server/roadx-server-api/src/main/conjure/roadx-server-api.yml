@@ -8,20 +8,22 @@ types:
       FilePath:
         alias: string
 
-      UnlabeledRoadImage:
-        fields:
-          path: FilePath
+      UnlabeledRoadImagePath:
+        alias: FilePath
 
-      LabeledRoadImage:
-        fields:
-          path: FilePath
-          classifications: set<string>
-          timestamp: string
-          location: string
+      LabeledRoadImagePath:
+        alias: FilePath
 
       ClassifyRequest:
         fields: 
-          image: UnlabeledRoadImage
+          image: UnlabeledRoadImagePath
+      
+      ClassifyResponse:
+        fields:
+          image: LabeledRoadImagePath
+          classifications: set<string>
+          timestamp: string
+          location: string
   
 services:
   ClassificationService:
@@ -32,6 +34,5 @@ services:
       classify:
         http: POST /classify
         args:
-          classifyRequest:
-            param-type: body
-            type: ClassifyRequest
+          request: ClassifyRequest
+        returns: ClassifyResponse

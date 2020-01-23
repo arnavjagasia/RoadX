@@ -1,0 +1,38 @@
+types:
+  definitions:
+    default-package: com.roadx.platform
+    objects:
+
+      # Classification Service 
+
+      FilePath:
+        alias: string
+
+      UnlabeledRoadImagePath:
+        alias: FilePath
+
+      LabeledRoadImagePath:
+        alias: FilePath
+
+      ClassifyRequest:
+        fields: 
+          image: UnlabeledRoadImagePath
+      
+      ClassifyResponse:
+        fields:
+          image: LabeledRoadImagePath
+          classifications: set<string>
+          timestamp: string
+          location: string
+  
+services:
+  ClassificationService:
+    name: Classification
+    package: com.roadx.platform
+    base-path: /model
+    endpoints:
+      classify:
+        http: POST /classify
+        args:
+          request: ClassifyRequest
+        returns: ClassifyResponse

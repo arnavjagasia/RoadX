@@ -1,0 +1,140 @@
+{
+  "version" : 1,
+  "errors" : [ ],
+  "types" : [ {
+    "type" : "object",
+    "object" : {
+      "typeName" : {
+        "name" : "ClassifyRequest",
+        "package" : "com.roadx.platform"
+      },
+      "fields" : [ {
+        "fieldName" : "image",
+        "type" : {
+          "type" : "reference",
+          "reference" : {
+            "name" : "UnlabeledRoadImagePath",
+            "package" : "com.roadx.platform"
+          }
+        }
+      } ]
+    }
+  }, {
+    "type" : "alias",
+    "alias" : {
+      "typeName" : {
+        "name" : "LabeledRoadImagePath",
+        "package" : "com.roadx.platform"
+      },
+      "alias" : {
+        "type" : "reference",
+        "reference" : {
+          "name" : "FilePath",
+          "package" : "com.roadx.platform"
+        }
+      }
+    }
+  }, {
+    "type" : "alias",
+    "alias" : {
+      "typeName" : {
+        "name" : "UnlabeledRoadImagePath",
+        "package" : "com.roadx.platform"
+      },
+      "alias" : {
+        "type" : "reference",
+        "reference" : {
+          "name" : "FilePath",
+          "package" : "com.roadx.platform"
+        }
+      }
+    }
+  }, {
+    "type" : "object",
+    "object" : {
+      "typeName" : {
+        "name" : "ClassifyResponse",
+        "package" : "com.roadx.platform"
+      },
+      "fields" : [ {
+        "fieldName" : "image",
+        "type" : {
+          "type" : "reference",
+          "reference" : {
+            "name" : "LabeledRoadImagePath",
+            "package" : "com.roadx.platform"
+          }
+        }
+      }, {
+        "fieldName" : "classifications",
+        "type" : {
+          "type" : "set",
+          "set" : {
+            "itemType" : {
+              "type" : "primitive",
+              "primitive" : "STRING"
+            }
+          }
+        }
+      }, {
+        "fieldName" : "timestamp",
+        "type" : {
+          "type" : "primitive",
+          "primitive" : "STRING"
+        }
+      }, {
+        "fieldName" : "location",
+        "type" : {
+          "type" : "primitive",
+          "primitive" : "STRING"
+        }
+      } ]
+    }
+  }, {
+    "type" : "alias",
+    "alias" : {
+      "typeName" : {
+        "name" : "FilePath",
+        "package" : "com.roadx.platform"
+      },
+      "alias" : {
+        "type" : "primitive",
+        "primitive" : "STRING"
+      }
+    }
+  } ],
+  "services" : [ {
+    "serviceName" : {
+      "name" : "ClassificationService",
+      "package" : "com.roadx.platform"
+    },
+    "endpoints" : [ {
+      "endpointName" : "classify",
+      "httpMethod" : "POST",
+      "httpPath" : "/model/classify",
+      "args" : [ {
+        "argName" : "request",
+        "type" : {
+          "type" : "reference",
+          "reference" : {
+            "name" : "ClassifyRequest",
+            "package" : "com.roadx.platform"
+          }
+        },
+        "paramType" : {
+          "type" : "body",
+          "body" : { }
+        },
+        "markers" : [ ]
+      } ],
+      "returns" : {
+        "type" : "reference",
+        "reference" : {
+          "name" : "ClassifyResponse",
+          "package" : "com.roadx.platform"
+        }
+      },
+      "markers" : [ ]
+    } ]
+  } ]
+}
