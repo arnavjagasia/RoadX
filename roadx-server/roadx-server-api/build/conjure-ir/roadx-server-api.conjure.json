@@ -38,6 +38,66 @@
     "type" : "alias",
     "alias" : {
       "typeName" : {
+        "name" : "Timestamp",
+        "package" : "com.roadx.platform"
+      },
+      "alias" : {
+        "type" : "primitive",
+        "primitive" : "STRING"
+      }
+    }
+  }, {
+    "type" : "object",
+    "object" : {
+      "typeName" : {
+        "name" : "CreateRequest",
+        "package" : "com.roadx.platform"
+      },
+      "fields" : [ {
+        "fieldName" : "imageFilePath",
+        "type" : {
+          "type" : "reference",
+          "reference" : {
+            "name" : "UnlabeledRoadImagePath",
+            "package" : "com.roadx.platform"
+          }
+        }
+      }, {
+        "fieldName" : "deviceId",
+        "type" : {
+          "type" : "reference",
+          "reference" : {
+            "name" : "DeviceId",
+            "package" : "com.roadx.platform"
+          }
+        }
+      }, {
+        "fieldName" : "timestamp",
+        "type" : {
+          "type" : "reference",
+          "reference" : {
+            "name" : "Timestamp",
+            "package" : "com.roadx.platform"
+          }
+        }
+      } ]
+    }
+  }, {
+    "type" : "alias",
+    "alias" : {
+      "typeName" : {
+        "name" : "DeviceId",
+        "package" : "com.roadx.platform"
+      },
+      "alias" : {
+        "type" : "primitive",
+        "primitive" : "STRING"
+      }
+    }
+  }, {
+    "type" : "alias",
+    "alias" : {
+      "typeName" : {
         "name" : "UnlabeledRoadImagePath",
         "package" : "com.roadx.platform"
       },
@@ -109,6 +169,26 @@
       "package" : "com.roadx.platform"
     },
     "endpoints" : [ {
+      "endpointName" : "create",
+      "httpMethod" : "POST",
+      "httpPath" : "/model/create",
+      "args" : [ {
+        "argName" : "request",
+        "type" : {
+          "type" : "reference",
+          "reference" : {
+            "name" : "CreateRequest",
+            "package" : "com.roadx.platform"
+          }
+        },
+        "paramType" : {
+          "type" : "body",
+          "body" : { }
+        },
+        "markers" : [ ]
+      } ],
+      "markers" : [ ]
+    }, {
       "endpointName" : "classify",
       "httpMethod" : "POST",
       "httpPath" : "/model/classify",

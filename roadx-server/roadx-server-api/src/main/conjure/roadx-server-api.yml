@@ -4,8 +4,13 @@ types:
     objects:
 
       # Classification Service 
+      DeviceId:
+        alias: string
 
       FilePath:
+        alias: string
+      
+      Timestamp:
         alias: string
 
       UnlabeledRoadImagePath:
@@ -13,6 +18,12 @@ types:
 
       LabeledRoadImagePath:
         alias: FilePath
+      
+      CreateRequest:
+        fields:
+          imageFilePath: UnlabeledRoadImagePath
+          deviceId: DeviceId
+          timestamp: Timestamp
 
       ClassifyRequest:
         fields: 
@@ -31,6 +42,11 @@ services:
     package: com.roadx.platform
     base-path: /model
     endpoints:
+      create:
+        http: POST /create
+        args:
+          request: CreateRequest
+    
       classify:
         http: POST /classify
         args:
