@@ -9,7 +9,6 @@
 
 rootProject.name = 'roadx-server'
 
-include 'roadx-server'
 include 'roadx-server-api'
 include 'roadx-server-api:roadx-server-api-typescript'
 include 'roadx-server-api:roadx-server-api-python'

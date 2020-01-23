@@ -1,6 +1,6 @@
 types:
   definitions:
-    default-package: com.roadx
+    default-package: com.roadx.platform
     objects:
 
       # Classification Service 
@@ -26,7 +26,7 @@ types:
 services:
   ClassificationService:
     name: Classification
-    package: com.roadx
+    package: com.roadx.platform
     base-path: /model
     endpoints:
       classify:
