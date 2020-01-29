@@ -1,0 +1,13 @@
+.request-reset-form {
+  text-align: left;
+  padding: 2em;
+}
+
+#request-reset-header{
+  padding-top: 3em;
+  padding-bottom: 2em;
+}
+
+#submit{
+  margin: 1em;
+}

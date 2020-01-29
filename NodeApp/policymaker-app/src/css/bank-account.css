@@ -1,0 +1,11 @@
+.bank-account-form {
+    text-align: left;
+  }
+  
+  #bank-account-header{
+    padding-top: 3em;
+  }
+  
+  #submit{
+    margin: 1em;
+  }
