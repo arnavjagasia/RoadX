@@ -1,12 +1,12 @@
 import React from 'react';
 import './App.css';
-import UploadFile from './components/Uploader';
+import FileUploader from './components/FileUploader';
 
 const App: React.FC = () => {
   return (
     <div className="App">
       <header className="App-header">
-      <UploadFile />
+      <FileUploader />
       </header>
     </div>
   );
