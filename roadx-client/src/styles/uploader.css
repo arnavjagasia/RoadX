@@ -24,6 +24,7 @@
     padding: 1em;
     background-color: #E1E8ED;
     width: 100%;
+    align-items: center;
 }
 
 .uploader__nav_contents {
