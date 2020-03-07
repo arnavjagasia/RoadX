@@ -1,8 +1,14 @@
 import React from 'react';
+import UploaderNav from './UploaderNav';
+import FileUploader from './FileUploader';
+import DeviceRegisterer from './DeviceRegisterer';
+
+import '../styles/uploader.css';
 
 const uploaderStates: Array<string> = [
-    "Register device",
-    "Upload files",
+    "Register Device",
+    "Upload Files",
+    "Analyze"
 ]
 
 interface IUploaderState {
@@ -21,4 +27,27 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
             uploadTime: new Date(),
         })
     }
+
+    handleUploaderStateChange(stateNumber: number) {
+        this.setState({
+            uploaderState: stateNumber
+        })
+    }
+
+    render() {
+        return (
+            <div className="uploader__container">
+                <div className="uploader__nav">
+                    <UploaderNav 
+                        states={uploaderStates}
+                        currentState={this.state.uploaderState}
+                        handleUploadStateChange={this.handleUploaderStateChange}
+                    />
+                </div>
+                <div className="uploader__window">
+                    <FileUploader />
+                </div>
+            </div>
+        )
+    }   
 }
