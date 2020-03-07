@@ -39,6 +39,7 @@
 .uploader__nav_metadata_section {
     display: flex;
     flex-flow: column;
+    padding: 1em;
 }
 
 .uploader__nav_title {
@@ -60,16 +61,28 @@
 
 .uploader__nav_item {
     display: flex;
-    font-size: 1.5em;
-    margin: 1em;
-    color: white;
+    flex-flow: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 1em;
+    margin-bottom: 1em;
+    text-transform: uppercase;
+    background-color: #F5F8FA;
+    /* color: white; */
+}
+
+.uploader__nav_item p {
+    padding-right: 1em;
+    margin-bottom: 0em;
 }
 
 .uploader__nav_item--disabled {
     opacity: 0.5;
-    color: #E1E8ED;
+    background-color: #F5F8FA;
+    /* color: #E1E8ED; */
 }
 
 .uploader__nav_item--current {
-    color: white;
+    /* color: #E1E8ED; */
+    background-color: #F5F8FA;
 }

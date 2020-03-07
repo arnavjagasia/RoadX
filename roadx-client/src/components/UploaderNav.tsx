@@ -1,4 +1,8 @@
 import React from 'react';
+import { Card, Icon } from '@blueprintjs/core';
+import { IconNames } from '@blueprintjs/icons';
+
+
 import "../styles/uploader.css";
 
 interface IUploaderNavProps {
@@ -20,27 +24,30 @@ class NavItem extends React.Component<IUploaderNavItemProps, {}> {
     render() {
         if (this.props.isDisabled) {
             return (
-                <div className="uploader__nav_item uploader__nav_item--disabled" >
-                    {this.props.stateName}
-                </div>
+                <Card className="uploader__nav_item uploader__nav_item--disabled"> 
+                    <p>{this.props.stateName}</p>
+                </Card>
             )
         } else if (this.props.isCurrent) {
             return (
-                <div 
+                <Card 
                     className="uploader__nav_item uploader__nav_item--current"
-                    onSelect={this.props.handleUploadStateChange}
+                    onClick={this.props.handleUploadStateChange}
+                    interactive={true}
                 >
-                    {this.props.stateName}
-                </div>
+                    <p>{this.props.stateName}</p>
+                </Card>
             )
         } else {
             return (
-                <div 
+                <Card 
                     className="uploader__nav_item"
-                    onSelect={this.props.handleUploadStateChange}
+                    onClick={this.props.handleUploadStateChange}
+                    interactive={true}
                 >
-                    {this.props.stateName}
-                </div>
+                    <p>{this.props.stateName}</p>
+                    <Icon icon={IconNames.TICK} />
+                </Card>
             )
         }
     }
