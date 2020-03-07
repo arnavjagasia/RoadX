@@ -1,0 +1,25 @@
+.registerer__container {
+    display: flex;
+    flex-flow: column;
+    width: 100%;
+    height: 100vh;
+}
+
+.registerer__text {
+    display: flex;
+    flex-flow: column;
+    padding: 1em;
+    width: 100%;
+    align-items: center;
+    color: #293742;
+    font-size: 2em;
+
+}
+
+.registerer__selector {
+    display: flex;
+    flex-flow: column;
+    padding: 1em;
+    width: 100%;
+    align-items: center;
+}

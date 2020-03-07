@@ -56,7 +56,6 @@ export default class UploaderNav extends React.Component<IUploaderNavProps, {}> 
             } else if (idx > this.props.currentState) {
                 isDisabled = true;
             }
-            console.log(isDisabled)
             return(
                 <NavItem
                     key={idx}

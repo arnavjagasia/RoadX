@@ -7,7 +7,6 @@ function GetDropzoneUploader() {
     // TODO handle only one file
     const file: {[key: string]: string} = acceptedFiles[0];
     const path: string = file['path'];
-    console.log(" Uploaded File ", acceptedFiles);
     const requestData = {
       'imageFilePath': path,
       "deviceId": 123,

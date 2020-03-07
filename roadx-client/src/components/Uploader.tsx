@@ -21,16 +21,23 @@ interface IUploaderState {
 
 export default class Uploader extends React.Component<{}, IUploaderState> {
     // Initialize state when component mounts
-    componentWillMount() {
+    state = {
+        uploaderState: 0,
+        uploadTime: new Date(),
+        deviceId: undefined,
+        userId: undefined,
+        file: undefined,
+    };
+
+    handleUploaderStateChange = (stateNumber: number) => {
         this.setState({
-            uploaderState: 0,
-            uploadTime: new Date(),
+            uploaderState: stateNumber
         })
     }
 
-    handleUploaderStateChange(stateNumber: number) {
+    registerDeviceId = (deviceId: Number) => {
         this.setState({
-            uploaderState: stateNumber
+            deviceId: deviceId as number
         })
     }
 
@@ -45,7 +52,9 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
                     />
                 </div>
                 <div className="uploader__window">
-                    <FileUploader />
+                    <DeviceRegisterer 
+                    registerDeviceId={this.registerDeviceId} 
+                    currentDeviceId={this.state.deviceId}/>
                 </div>
             </div>
         )
