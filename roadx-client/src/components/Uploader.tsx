@@ -49,6 +49,7 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
                         states={uploaderStates}
                         currentState={this.state.uploaderState}
                         handleUploadStateChange={this.handleUploaderStateChange}
+                        deviceId={this.state.deviceId}
                     />
                 </div>
                 <div className="uploader__window">

@@ -26,12 +26,34 @@
     width: 100%;
 }
 
-/* Styles for Uploader Nav */
 .uploader__nav_contents {
     display: flex;
     flex-flow: column;
     flex: 1;
 }
+
+/* Styles for Metadata at top of Nav */
+.uploader__nav_metadata_section {
+    display: flex;
+    flex-flow: column;
+}
+
+.uploader__nav_title {
+    display: flex;
+    font-size: 2em;
+    font-weight: bold;
+    color: white; 
+    justify-content: center;
+}
+
+.uploader__nav_metadata_item {
+    display: flex;
+    font-size: 1em;
+    color: white; 
+    justify-content: center;
+    text-transform: uppercase;
+}
+/* Styles for Uploader Nav */
 
 .uploader__nav_item {
     display: flex;

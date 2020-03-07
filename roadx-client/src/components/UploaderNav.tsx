@@ -1,10 +1,10 @@
 import React from 'react';
-import "../styles/uploader.css"
-import { ReactComponent } from '*.svg';
+import "../styles/uploader.css";
 
 interface IUploaderNavProps {
     states: Array<string>;
     currentState: number;
+    deviceId?: number;
     handleUploadStateChange: (stateNumber: number) => void;
 }
 
@@ -47,7 +47,7 @@ class NavItem extends React.Component<IUploaderNavItemProps, {}> {
 }
 
 export default class UploaderNav extends React.Component<IUploaderNavProps, {}> {
-    getFormattedNavStates() {
+    renderFormattedNavStates() {
         let isDisabled: boolean = false
         let isCurrentState: boolean = false
         const formattedStates: JSX.Element[] = this.props.states.map((state, idx) => {
@@ -70,10 +70,25 @@ export default class UploaderNav extends React.Component<IUploaderNavProps, {}> 
         return formattedStates
     }
 
+    renderUploadMetadata() {
+        return (
+            <div className="uploader__nav_metadata_section">
+                <div className="uploader__nav_title"> RoadX </div>
+                {
+                    this.props.deviceId && 
+                    <div className="uploader__nav_metadata_item"> 
+                        Device Id: {this.props.deviceId} 
+                    </div>
+                }
+            </div>
+        )
+    }
+
     render() {
         return (
             <div className="uploader__nav_contents">
-                {this.getFormattedNavStates()}
+                {this.renderUploadMetadata()}
+                {this.renderFormattedNavStates()}
             </div>
         )
     }
