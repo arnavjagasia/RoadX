@@ -33,6 +33,7 @@ export default class DeviceRenderer extends React.Component<IDeviceRegistererPro
             </div>
         )
     }
+
     renderDeviceSelector() {
         const selectorText: string = this.props.currentDeviceId ? 
         `Device #${this.props.currentDeviceId}` : 
@@ -58,7 +59,7 @@ export default class DeviceRenderer extends React.Component<IDeviceRegistererPro
         return (
             <div className="registerer__container">
                 {this.renderText()}
-                {this.renderDeviceSelector()}
+                { this.renderDeviceSelector() }    
             </div>
         )
     } 

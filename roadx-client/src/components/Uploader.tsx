@@ -37,8 +37,24 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
 
     registerDeviceId = (deviceId: Number) => {
         this.setState({
-            deviceId: deviceId as number
+            deviceId: deviceId as number,
+            uploaderState: 1, // Can move from device registration to uploading files
         })
+    }
+
+    renderWindowContents() {
+        if (!this.state.deviceId) {
+            return (
+                <DeviceRegisterer 
+                    registerDeviceId={this.registerDeviceId} 
+                    currentDeviceId={this.state.deviceId}
+                />
+            )
+        } else if (!this.state.file) {
+            return (
+                <FileUploader />
+            )
+        }
     }
 
     render() {
@@ -53,9 +69,7 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
                     />
                 </div>
                 <div className="uploader__window">
-                    <DeviceRegisterer 
-                    registerDeviceId={this.registerDeviceId} 
-                    currentDeviceId={this.state.deviceId}/>
+                    {this.renderWindowContents()}
                 </div>
             </div>
         )

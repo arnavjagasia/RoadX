@@ -27,6 +27,8 @@
     align-items: center;
 }
 
+/* Styles for entire nav pane */
+
 .uploader__nav_contents {
     display: flex;
     flex-flow: column;
@@ -54,7 +56,7 @@
     justify-content: center;
     text-transform: uppercase;
 }
-/* Styles for Uploader Nav */
+/* Styles for Uploader Nav Item */
 
 .uploader__nav_item {
     display: flex;
