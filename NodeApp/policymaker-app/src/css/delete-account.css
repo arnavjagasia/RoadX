@@ -1,0 +1,17 @@
+.delete-account-form {
+  text-align: left;
+}
+
+#delete-account-header{
+  padding-top: 3em;
+}
+
+#submit-delete{
+  margin: 1em;
+  position: absolute;
+  bottom: 0;
+}
+
+#delete-link{
+  color: white;
+}
