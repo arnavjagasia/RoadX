@@ -1,0 +1,88 @@
+
+/* Styles for Uploader.tsx (Main Uploader Workflow */
+
+.uploader__container {
+    display: flex;
+    flex-flow: row;
+    width: 100%;
+    height: 100vh;
+}
+
+.uploader__nav {
+    display: flex;
+    flex-flow: column;
+    flex: 1;
+    padding: 1em;
+    background-color: #30404D;
+    width: 100%;
+}
+
+.uploader__window {
+    display: flex;
+    flex-flow: column;
+    flex: 4;
+    padding: 1em;
+    background-color: #E1E8ED;
+    width: 100%;
+    align-items: center;
+}
+
+/* Styles for entire nav pane */
+
+.uploader__nav_contents {
+    display: flex;
+    flex-flow: column;
+    flex: 1;
+}
+
+/* Styles for Metadata at top of Nav */
+.uploader__nav_metadata_section {
+    display: flex;
+    flex-flow: column;
+    padding: 1em;
+}
+
+.uploader__nav_title {
+    display: flex;
+    font-size: 2em;
+    font-weight: bold;
+    color: white; 
+    justify-content: center;
+}
+
+.uploader__nav_metadata_item {
+    display: flex;
+    font-size: 1em;
+    color: white; 
+    justify-content: center;
+    text-transform: uppercase;
+}
+/* Styles for Uploader Nav Item */
+
+.uploader__nav_item {
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 1em;
+    margin-bottom: 1em;
+    text-transform: uppercase;
+    background-color: #F5F8FA;
+    /* color: white; */
+}
+
+.uploader__nav_item p {
+    padding-right: 1em;
+    margin-bottom: 0em;
+}
+
+.uploader__nav_item--disabled {
+    opacity: 0.5;
+    background-color: #F5F8FA;
+    /* color: #E1E8ED; */
+}
+
+.uploader__nav_item--current {
+    /* color: #E1E8ED; */
+    background-color: #F5F8FA;
+}
