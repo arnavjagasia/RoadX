@@ -24,9 +24,9 @@ export const renderDevice: ItemRenderer<Number> = (deviceId, { handleClick, modi
     );
 };
 
-export default class DeviceRenderer extends React.Component<IDeviceRegistererProps, {}> {
+export default class DeviceRegisterer extends React.Component<IDeviceRegistererProps, {}> {
     renderText() {
-        const landingText: string = "Select your RoadX Device."
+        const landingText: string = "Let's begin. Please select your RoadX device."
         return (
             <div className="registerer__text">
                 {landingText}
@@ -37,7 +37,7 @@ export default class DeviceRenderer extends React.Component<IDeviceRegistererPro
     renderDeviceSelector() {
         const selectorText: string = this.props.currentDeviceId ? 
         `Device #${this.props.currentDeviceId}` : 
-        "Select a RoadX Device..."
+        "Select a device..."
         return (
             <div className="registerer__selector">
                 <DeviceSelector 

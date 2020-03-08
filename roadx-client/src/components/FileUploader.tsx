@@ -6,15 +6,14 @@ import { useDropzone } from 'react-dropzone';
 import '../styles/fileuploader.css';
 
 interface IUploadFileProps {
-  registerFile: (file: File) => void
+  registerFile: (file: File) => void;
+  uploadString: string;
 }
 
 const UploadFile = (p: IUploadFileProps): React.ReactElement => {
   const onDrop = useCallback(acceptedFiles => {
-    // TODO handle only one file
     const file: File = acceptedFiles[0];
     p.registerFile(file);
-    
   }, [p])
   const {getRootProps, getInputProps} = useDropzone({onDrop})
 
@@ -22,18 +21,18 @@ const UploadFile = (p: IUploadFileProps): React.ReactElement => {
     <div {...getRootProps()}>
       <input {...getInputProps()} />
       {
-          <div className="file_uploader__text">{uploadString}</div>
+          <div className="file_uploader__text">{p.uploadString}</div>
       }
     </div>
   )
 }
-interface IFileUploaderProps {
+
+export interface IFileUploaderProps {
   registerFile: (file: File) => void;
   uploadFile: () => void;
   registeredFile?: {[key: string]: string};
+  uploadString: string;
 }
-
-const uploadString: string = "Drag RoadX files here or click here to select a file."
 
 export default class FileUploader extends React.Component<IFileUploaderProps, {}> {
   renderFileInfo() {
@@ -53,12 +52,16 @@ export default class FileUploader extends React.Component<IFileUploaderProps, {}
   render() {
       return(
       <div className="file_uploader__container">
-        <UploadFile registerFile={this.props.registerFile}/>
+        <UploadFile 
+          registerFile={this.props.registerFile} 
+          uploadString={this.props.uploadString}
+        />
         {this.renderFileInfo()}
         <div className="file_uploader__upload_button"> 
           <Button 
             large={true}
-            icon={IconNames.GRAPH}
+            disabled={!this.props.registeredFile}
+            icon={IconNames.UPLOAD}
             text={"Upload RoadX Data"}
             onClick={this.props.uploadFile}
           />

@@ -35,6 +35,10 @@
     flex: 1;
 }
 
+.uploader__discovery_button {
+    margin: 1em;
+}
+
 /* Styles for Metadata at top of Nav */
 .uploader__nav_metadata_section {
     display: flex;
@@ -48,15 +52,18 @@
     font-weight: bold;
     color: white; 
     justify-content: center;
+    text-align: center;
 }
 
 .uploader__nav_metadata_item {
     display: flex;
-    font-size: 1em;
+    font-size: 1.2em;
     color: white; 
+    padding: 1em;
     justify-content: center;
     text-transform: uppercase;
 }
+
 /* Styles for Uploader Nav Item */
 
 .uploader__nav_item {
