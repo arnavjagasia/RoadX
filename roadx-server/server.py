@@ -1,8 +1,13 @@
 import os
 import json
-# import model
+import io
+from PIL import Image
+import numpy as np
+import model
 from flask import Flask, request, jsonify
 from flask_pymongo import PyMongo
+import png
+import tensorflow as tf
 import gridfs
 
 app = Flask(__name__)
@@ -19,10 +24,6 @@ def has_json_body(content_type_string):
 
 @app.route('/create', methods=['POST'])
 def create():
-    # Validation
-    if request is None or request.method != 'POST':
-        return(jsonify({'ok': False, 'message': 'Bad request'}), 401)
-
     # Extract parameters from request
     data = request.form
     image = request.files['file']
@@ -51,16 +52,38 @@ def create():
     return_code = 200
     return (jsonify(response), return_code)
 
-@app.route('/analyzeImage', methods=['GET'])
-def analyzeImage():
-    ## Get image by id
-    #image  = get from mongo by id
+def load_image_into_numpy_array(image):
+    (im_width, im_height) = image.size
+    arr = np.array(image.getdata())[...,:3]
+    return arr.reshape((im_height, im_width, 3)).astype(np.uint8)
 
-    ## Run model on image
-    #image_np, class_and_scores = model.run_model(image)
-    ## Save new Data
-    ## Return 200
+@app.route('/analyzeImage', methods=['POST'])
+def analyzeImage():
+    # Get image by filename
+    data = request.form
+    hasFilename = bool(data.get('filename', None) is not None)
+    if not hasFilename:
+        return(jsonify({'ok': False, 'message': 'Bad request'}), 401)
     
+    filename = data.get('filename')
+    out = gridfs.GridFS(mongo.db).get_version(filename)
+    image_bytes = out.read()
+    print(len(image_bytes))
+
+    img = Image.open(io.BytesIO(image_bytes))
+    # plt.imshow(np.array(img))
+    # plt.savefig("test3.png")
+    # arr = np.array(img)
+    # print(arr.shape)
+    # arr = load_image_into_numpy_array(img) 
+    # print(arr.shape)
+    # png.from_array(arr, 'L').save("test.png")
+    # # response = mongo.send_file(filename)
+    # print(arr)
+    # return response
+    # Run model on image
+    image_np, class_and_scores = model.run_model(img)
+    # plt.imshow(image_np)
     
     response = {'ok': False, 'message': 'Internal Error'}
     return_code = 500
