@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Icon } from '@blueprintjs/core';
+import { Button, Card, Icon, Intent } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 
 
@@ -9,7 +9,9 @@ interface IUploaderNavProps {
     states: Array<string>;
     currentState: number;
     deviceId?: number;
+    canRunAnalysis: boolean;
     handleUploadStateChange: (stateNumber: number) => void;
+    runAnalysis: () => void;
 }
 
 interface IUploaderNavItemProps {
@@ -78,7 +80,7 @@ export default class UploaderNav extends React.Component<IUploaderNavProps, {}> 
     renderUploadMetadata() {
         return (
             <div className="uploader__nav_metadata_section">
-                <div className="uploader__nav_title"> RoadX </div>
+                <div className="uploader__nav_title"> RoadX Data Upload Portal </div>
                 {
                     this.props.deviceId && 
                     <div className="uploader__nav_metadata_item"> 
@@ -89,11 +91,25 @@ export default class UploaderNav extends React.Component<IUploaderNavProps, {}> 
         )
     }
 
+    renderDiscoveryButton() {
+        return (
+            <Button 
+                className="uploader__discovery_button"
+                text={"Run Discovery"}
+                large={true}
+                disabled={!this.props.canRunAnalysis}
+                icon={IconNames.GRAPH}
+                onClick={this.props.runAnalysis}
+            />
+        )
+    }
+
     render() {
         return (
             <div className="uploader__nav_contents">
                 {this.renderUploadMetadata()}
                 {this.renderFormattedNavStates()}
+                {this.renderDiscoveryButton()}
             </div>
         )
     }
