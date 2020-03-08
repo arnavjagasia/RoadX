@@ -33,7 +33,6 @@ class NavItem extends React.Component<IUploaderNavItemProps, {}> {
                 <Card 
                     className="uploader__nav_item uploader__nav_item--current"
                     onClick={this.props.handleUploadStateChange}
-                    interactive={true}
                 >
                     <p>{this.props.stateName}</p>
                 </Card>
@@ -43,7 +42,6 @@ class NavItem extends React.Component<IUploaderNavItemProps, {}> {
                 <Card 
                     className="uploader__nav_item"
                     onClick={this.props.handleUploadStateChange}
-                    interactive={true}
                 >
                     <p>{this.props.stateName}</p>
                     <Icon icon={IconNames.TICK} />
