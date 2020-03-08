@@ -1,8 +1,13 @@
 import os
 import json
-# import model
+import io
+from PIL import Image
+import numpy as np
+import model
 from flask import Flask, request, jsonify
 from flask_pymongo import PyMongo
+import png
+import tensorflow as tf
 import gridfs
 
 app = Flask(__name__)
@@ -19,10 +24,6 @@ def has_json_body(content_type_string):
 
 @app.route('/create', methods=['POST'])
 def create():
-    # Validation
-    if request is None or request.method != 'POST':
-        return(jsonify({'ok': False, 'message': 'Bad request'}), 401)
-
     # Extract parameters from request
     data = request.form
     image = request.files['file']
@@ -43,7 +44,7 @@ def create():
     database_data = {
         'deviceId': data.get('deviceId'),
         'timestamp': data.get('timestamp'),
-        'filename': data.get('filename')
+        'filename_raw': data.get('filename'),
     }
     mongo.db.images.insert_one(database_data)
 
@@ -51,17 +52,60 @@ def create():
     return_code = 200
     return (jsonify(response), return_code)
 
-@app.route('/analyzeImage', methods=['GET'])
-def analyzeImage():
-    ## Get image by id
-    #image  = get from mongo by id
+def bytes_to_image(binary_data):
+    image = Image.open(io.BytesIO(binary_data))
+    (im_width, im_height) = image.size
+    arr = np.array(image.getdata())[...,:3]
+    arr = arr.reshape((im_height, im_width, 3)).astype(np.uint8)
+    img = Image.fromarray(arr.astype('uint8'), 'RGB')
+    return img, image.format
 
-    ## Run model on image
-    #image_np, class_and_scores = model.run_model(image)
-    ## Save new Data
-    ## Return 200
+@app.route('/analyzeImage', methods=['POST'])
+def analyzeImage():
+    # Validate Request
+    data = request.form
+    hasFilename = bool(data.get('filename', None) is not None)
+    if not hasFilename:
+        return(jsonify({'ok': False, 'message': 'Bad request'}), 401)
     
+    # Get image by filename
+    filename = data.get('filename')
+    storage = gridfs.GridFS(mongo.db)
+    out = storage.get_version(filename)
+    image_bytes = out.read()
+    img, original_format = bytes_to_image(image_bytes)
+
+    image_list = [(filename, img)]
+
+    # Run model
+    results_dict = model.run_model(image_list)
+    scores = results_dict[filename]['scores']
+    classifiedImage = Image.fromarray(results_dict[filename]['classifiedImage'])
     
-    response = {'ok': False, 'message': 'Internal Error'}
-    return_code = 500
-    return (jsonify(response), return_code)
+    # Update mongo document about this image with classification results
+    classified_filename = filename + "-classified"
+    mongo.db.images.update_one(
+        {'filename_raw': filename}, 
+        {'$set':{
+            'filename_classified': classified_filename,
+            'scores': scores
+        }}
+    )
+    
+    # Save the new image
+    output = io.BytesIO()
+    classifiedImage.save(output, format=original_format)
+    storage.put(output.getvalue(), filename=classified_filename, content_type="image/png")
+
+    if scores is not None:
+        response = {'ok': True}
+        return (jsonify(response), 200)
+    else:
+        response = {'ok': False, 'message': 'Internal Error in classification model'}
+        return (jsonify(response), 500)
+
+# # Test that the image got stored
+# @app.route('/testRetrieve', methods=['GET'])
+# def testRetrieve():
+#     print("HERE")
+#     return mongo.send_file("2-sun-mar-08-2020-18:51:49-gmt-0400-(eastern-daylight-time)-classified")
