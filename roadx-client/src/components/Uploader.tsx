@@ -2,6 +2,7 @@ import React from 'react';
 import UploaderNav from './UploaderNav';
 import FileUploader from './FileUploader';
 import DeviceRegisterer from './DeviceRegisterer';
+import Analyzer from './Analyzer';
 
 import '../styles/uploader.css';
 import { Toaster, Intent } from '@blueprintjs/core';
@@ -18,7 +19,7 @@ interface IUploaderState {
     userId?: number;
     deviceId?: number;
     file?: File;
-    isRunningAnalysis: boolean;
+    filename?: string;
 }
 
 const toaster = Toaster.create()
@@ -31,7 +32,7 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
         deviceId: undefined,
         userId: undefined,
         file: undefined,
-        isRunningAnalysis: false,
+        filename: undefined,
     };
 
     handleUploaderStateChange = (stateNumber: number) => {
@@ -70,11 +71,12 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
             toaster.show(toastProps)
             return
         }
-        const formData: FormData = new FormData();
+        
         const timestamp: string = this.state.uploadTime.toString();
         const filename: string = this.state.deviceId + "-" + timestamp.replace(/\s+/g, '-').toLowerCase();
         const fileBlob: Blob = this.state.file!; // Blobs allow us to pass binary data
 
+        const formData: FormData = new FormData();
         formData.append('deviceId', this.state.deviceId!)
         formData.append('timestamp', timestamp)
         formData.append('filename', filename)
@@ -91,8 +93,8 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
         )
 
         this.setState({
-            isRunningAnalysis: true,
             uploaderState: 2, // Switch to analysis window
+            filename: filename,
         }, () => console.log("analysis"))
     }
     renderWindowContents() {
@@ -103,7 +105,7 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
                     currentDeviceId={this.state.deviceId}
                 />
             )
-        } else if (!this.state.isRunningAnalysis) {
+        } else if (!this.state.filename) {
             return (
                 <FileUploader 
                     registerFile={this.registerFile}
@@ -111,9 +113,11 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
                     uploadFile={this.uploadFile}
                 />
             )
-        } else {
+        } else if (this.state.filename) {
             return (
-               <div>Analyzing</div>  
+               <Analyzer 
+                    filename={this.state.filename!}
+               />
             )
         }
     }
