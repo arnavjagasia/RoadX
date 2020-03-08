@@ -5,7 +5,6 @@ import DeviceRegisterer from './DeviceRegisterer';
 
 import '../styles/uploader.css';
 import { Toaster, Intent } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
 
 const uploaderStates: Array<string> = [
     "Register Device",
@@ -18,7 +17,7 @@ interface IUploaderState {
     uploadTime: Date;
     userId?: number;
     deviceId?: number;
-    file?: {[key: string]: string};
+    file?: File;
     isRunningAnalysis: boolean;
 }
 
@@ -48,15 +47,22 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
         })
     }
 
-    registerFile = (file: {[key: string]: string}) => {
+    registerFile = (file: File) => {
         this.setState({
             file: file
         })
     }
 
     uploadFile = async () => {
+        if (!this.state.deviceId) {
+            const toastProps = {
+                'message': 'Please select a device!',
+                'intent': Intent.WARNING,
+            }
+            toaster.show(toastProps)
+            return
+        }
         if (!this.state.file) {
-            console.log("TOAST")
             const toastProps = {
                 'message': 'Please select a file!',
                 'intent': Intent.WARNING,
@@ -64,20 +70,17 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
             toaster.show(toastProps)
             return
         }
-        const path: string = this.state.file!['path'];
-        const requestData = {
-            'imageFilePath': path,
-            "deviceId": 123,
-            "timestamp": 123,
-        }
+        const formData = new FormData();
+        const blob: Blob = this.state.file!;
+        formData.append('deviceId', this.state.deviceId!)
+        formData.append('timestamp', this.state.uploadTime.toString())
+        formData.append('file', blob)
 
         await fetch('http://localhost:5000/create', {
-            method: 'post',
+            method: 'POST',
             mode: 'no-cors',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(requestData)
+            body: formData,
+            // headers: {'Content-Type': 'multipart/form-data'}
         }).then(response => {
             console.log(response)
         }).catch((reason) =>
