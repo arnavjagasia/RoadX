@@ -1,14 +1,14 @@
 import os
 import json
-import model
+# import model
 from flask import Flask, request, jsonify
-# from app import mongo
+from flask_pymongo import PyMongo
+import gridfs
 
 app = Flask(__name__)
-app.debug=True
-# ROOT_PATH = os.environ.get('ROOT_PATH')
-# LOG = logger.get_root_logger(
-#     __name__, filename=os.path.join(ROOT_PATH, 'output.log'))
+app.config["MONGO_URI"] = "mongodb://localhost:27017/RoadXDatabase"
+mongo = PyMongo(app)
+
 
 ### HELPERS
 def has_json_body(content_type_string):
@@ -19,29 +19,36 @@ def has_json_body(content_type_string):
 
 @app.route('/create', methods=['POST'])
 def create():
-    ## Validation
+    # Validation
     if request is None or request.method != 'POST':
         return(jsonify({'ok': False, 'message': 'Bad request'}), 401)
-    print(request.content_type)
-    ## Parse body
-    if has_json_body(request.content_type):
-        data = request.get_json()
-    else:
-        data = json.loads(request.data)
-    print(data)
-    ## Handle Request
-    hasFilePath = bool(data.get('imageFilePath', None) is not None)
+
+    # Extract parameters from request
+    data = request.form
+    image = request.files['file']
+
+    # Request parameter validation
+    hasFile = bool(image is not None)
     hasDeviceId = bool(data.get('deviceId', None) is not None)
     hasTimestamp = bool(data.get('timestamp', None) is not None)
     
-    if hasFilePath and hasDeviceId and hasTimestamp:
-        # mongo.db.users.insert_one(data)
-        response = {'ok': True, 'message': 'User created successfully!'}
-        return_code = 200
-        return (jsonify(response), return_code)
+    if not hasFile or not hasDeviceId or not hasTimestamp:
+        return(jsonify({'ok': False, 'message': 'Bad request'}), 401)
     
-    response = {'ok': False, 'message': 'Internal Error'}
-    return_code = 500
+    # Save the actual image in GridFS files
+    filename = data.get('deviceId') + '-' + data.get('timestamp')
+    mongo.save_file(filename, image, content_type="image/png")
+
+    # Save filename with the rest of the data
+    database_data = {
+        'deviceId': data.get('deviceId'),
+        'timestamp': data.get('timestamp'),
+        'filename': filename
+    }
+    mongo.db.images.insert_one(database_data)
+    
+    response = {'ok': True, 'message': 'User created successfully!'}
+    return_code = 200
     return (jsonify(response), return_code)
 
 @app.route('/analyzeImage', methods=['GET'])

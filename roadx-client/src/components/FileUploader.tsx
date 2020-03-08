@@ -6,13 +6,13 @@ import { useDropzone } from 'react-dropzone';
 import '../styles/fileuploader.css';
 
 interface IUploadFileProps {
-  registerFile: (file: {[key: string]: string}) => void
+  registerFile: (file: File) => void
 }
 
 const UploadFile = (p: IUploadFileProps): React.ReactElement => {
   const onDrop = useCallback(acceptedFiles => {
     // TODO handle only one file
-    const file: {[key: string]: string} = acceptedFiles[0];
+    const file: File = acceptedFiles[0];
     p.registerFile(file);
     
   }, [p])
@@ -28,7 +28,7 @@ const UploadFile = (p: IUploadFileProps): React.ReactElement => {
   )
 }
 interface IFileUploaderProps {
-  registerFile: (file: {[key: string]: string}) => void;
+  registerFile: (file: File) => void;
   uploadFile: () => void;
   registeredFile?: {[key: string]: string};
 }
