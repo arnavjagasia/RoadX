@@ -31,23 +31,23 @@ def create():
     hasFile = bool(image is not None)
     hasDeviceId = bool(data.get('deviceId', None) is not None)
     hasTimestamp = bool(data.get('timestamp', None) is not None)
+    hasFilename = bool(data.get('filename', None) is not None)
     
-    if not hasFile or not hasDeviceId or not hasTimestamp:
+    if not hasFile or not hasDeviceId or not hasTimestamp or not hasFilename:
         return(jsonify({'ok': False, 'message': 'Bad request'}), 401)
     
     # Save the actual image in GridFS files
-    filename = data.get('deviceId') + '-' + data.get('timestamp')
-    mongo.save_file(filename, image, content_type="image/png")
+    mongo.save_file(data.get('filename'), image, content_type="image/png")
 
     # Save filename with the rest of the data
     database_data = {
         'deviceId': data.get('deviceId'),
         'timestamp': data.get('timestamp'),
-        'filename': filename
+        'filename': data.get('filename')
     }
     mongo.db.images.insert_one(database_data)
-    
-    response = {'ok': True, 'message': 'User created successfully!'}
+
+    response = {'ok': True}
     return_code = 200
     return (jsonify(response), return_code)
 

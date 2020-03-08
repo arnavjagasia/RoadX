@@ -70,17 +70,20 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
             toaster.show(toastProps)
             return
         }
-        const formData = new FormData();
-        const blob: Blob = this.state.file!;
+        const formData: FormData = new FormData();
+        const timestamp: string = this.state.uploadTime.toString();
+        const filename: string = this.state.deviceId + "-" + timestamp.replace(/\s+/g, '-').toLowerCase();
+        const fileBlob: Blob = this.state.file!; // Blobs allow us to pass binary data
+
         formData.append('deviceId', this.state.deviceId!)
-        formData.append('timestamp', this.state.uploadTime.toString())
-        formData.append('file', blob)
+        formData.append('timestamp', timestamp)
+        formData.append('filename', filename)
+        formData.append('file', fileBlob)
 
         await fetch('http://localhost:5000/create', {
             method: 'POST',
-            mode: 'no-cors',
+            mode: 'no-cors', // cannot pass headers with no-cors
             body: formData,
-            // headers: {'Content-Type': 'multipart/form-data'}
         }).then(response => {
             console.log(response)
         }).catch((reason) =>
