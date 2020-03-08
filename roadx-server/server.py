@@ -1,5 +1,6 @@
 import os
 import json
+import model
 from flask import Flask, request, jsonify
 # from app import mongo
 
@@ -38,6 +39,21 @@ def create():
         response = {'ok': True, 'message': 'User created successfully!'}
         return_code = 200
         return (jsonify(response), return_code)
+    
+    response = {'ok': False, 'message': 'Internal Error'}
+    return_code = 500
+    return (jsonify(response), return_code)
+
+@app.route('/analyzeImage', methods=['GET'])
+def analyzeImage():
+    ## Get image by id
+    #image  = get from mongo by id
+
+    ## Run model on image
+    #image_np, class_and_scores = model.run_model(image)
+    ## Save new Data
+    ## Return 200
+    
     
     response = {'ok': False, 'message': 'Internal Error'}
     return_code = 500

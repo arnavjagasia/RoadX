@@ -61,6 +61,9 @@ def convert_input_to_output_path(input_path):
     output_path = filepath + "_labeled"
     return output_path
 
+def listToStringWithoutBrackets(list1):
+    return str(list1).replace('[','').replace(']','')
+
 def run_model(images):
     # Import Model 
     detection_graph = tf.Graph()
@@ -127,21 +130,10 @@ def run_model(images):
                     min_score_thresh=0.3,
                     use_normalized_coordinates=True,
                     line_thickness=3)
-                
-                def listToStringWithoutBrackets(list1):
-                    return str(list1).replace('[','').replace(']','')
-                
-                plt.figure(figsize=IMAGE_SIZE)
-                plt.imshow(image_np)
-                outputstr = "{filename:'" + convert_input_to_output_path(image_path) + "', classification: {" + listToStringWithoutBrackets(class_and_scores) + "}} \n" 
-                file1.write(outputstr)
-                plt.savefig(convert_input_to_output_path(image_path))
-
-### Run the Model ###
-print("Loading Images from inputs...")
-input_images = load_images()
-print("Running Model...")
-file1 = open("/Users/adeleli/Documents/GitHub/senior-design/model/output.txt","a") 
-run_model(input_images)
-file1.close() 
-print("Saving Images to outputs...")
+        
+                # plt.figure(figsize=IMAGE_SIZE)
+                # plt.imshow(image_np)
+                # outputstr = "{filename:'" + convert_input_to_output_path(image_path) + "', classification: {" + listToStringWithoutBrackets(class_and_scores) + "}} \n" 
+                # file1.write(outputstr)
+                # plt.savefig(convert_input_to_output_path(image_path))
+                return image_np, class_and_scores
