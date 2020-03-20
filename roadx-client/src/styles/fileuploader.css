@@ -1,0 +1,56 @@
+.file_uploader__container {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+}
+
+.file_uploader__text {
+    display: flex;
+    flex-flow: column;
+    width: 100%;
+    align-items: center;
+    color: #293742;
+    font-size: 2em;
+}
+
+.file_uploader__file_card {
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    justify-content: center;
+    padding: 1em;
+    margin-top: 2em;
+    background-color: #F5F8FA;
+    width: 30%;
+}
+
+.file_uploader__file_card h4 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.file_uploader__file_card p {
+    margin-bottom: 0;
+}
+
+.file_uploader__file_card--image {
+    display: flex;
+    flex: 1;
+}
+
+.file_uploader__file_card--contents {
+    display: flex;
+    flex-flow: column;
+    flex: 3;
+}
+
+.file_uploader__upload_button {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3em;
+}

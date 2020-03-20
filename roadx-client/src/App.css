@@ -1,5 +1,14 @@
+@import "~@blueprintjs/core/lib/css/blueprint.css";
+@import "~@blueprintjs/icons/lib/css/blueprint-icons.css";
+
 .App {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 100vh;
+  /* justify-content: flex-start; */
+  background-color: #A7B6C2;
+  width: 100%;
 }
 
 .App-logo {
