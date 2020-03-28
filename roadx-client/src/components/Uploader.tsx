@@ -78,7 +78,7 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
             toaster.show(toastProps)
             return
         }
-        
+
         const timestamp: string = this.state.uploadTime.toString();
         const filename: string = this.state.deviceId + "-" + timestamp.replace(/\s+/g, '-').toLowerCase();
         const fileBlob: Blob = this.state.imageFile!; // Blobs allow us to pass binary data
@@ -114,7 +114,7 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
             toaster.show(toastProps)
             return
         }
-    
+
         // FETCH FOR GPS DATA -- APPEND TO EXISTING DOC
         // OR, send all together at this point
 
@@ -140,14 +140,14 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
     renderWindowContents() {
         if (!this.state.deviceId) {
             return (
-                <DeviceRegisterer 
-                    registerDeviceId={this.registerDeviceId} 
+                <DeviceRegisterer
+                    registerDeviceId={this.registerDeviceId}
                     currentDeviceId={this.state.deviceId}
                 />
             )
         } else if (!this.state.imageFilename) {
             return (
-                <FileUploader 
+                <FileUploader
                     registerFile={this.registerImageFile}
                     registeredFile={this.state.imageFile}
                     uploadFile={this.uploadImageFile}
@@ -156,7 +156,7 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
             )
         } else if (!this.state.gpsFile) {
             return (
-                <FileUploader 
+                <FileUploader
                     registerFile={this.registerGPSFile}
                     registeredFile={this.state.gpsFile}
                     uploadFile={this.uploadGPSFile}
@@ -170,7 +170,7 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
         return (
             <div className="uploader__container">
                 <div className="uploader__nav">
-                    <UploaderNav 
+                    <UploaderNav
                         states={uploaderStates}
                         currentState={this.state.uploaderState}
                         handleUploadStateChange={this.handleUploaderStateChange}
@@ -184,5 +184,5 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
                 </div>
             </div>
         )
-    }   
+    }
 }
