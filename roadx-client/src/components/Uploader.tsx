@@ -29,11 +29,11 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
     state = {
         uploaderState: 0,
         uploadTime: new Date(),
-        deviceId: undefined,
-        userId: undefined,
-        imageFile: undefined,
-        imageFilename: undefined,
-        gpsFile: undefined,
+        deviceId: 0,
+        userId: 0,
+        imageFile: new File(null, null),
+        imageFilename: "",
+        gpsFile: new File(null, null),
     };
 
     handleUploaderStateChange = (stateNumber: number) => {
@@ -84,7 +84,7 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
         const fileBlob: Blob = this.state.imageFile!; // Blobs allow us to pass binary data
 
         const formData: FormData = new FormData();
-        formData.append('deviceId', this.state.deviceId!)
+        //formData.append('deviceId', this.state.deviceId!)
         formData.append('timestamp', timestamp)
         formData.append('filename', filename)
         formData.append('file', fileBlob)
@@ -137,52 +137,52 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
         )
     }
 
-    renderWindowContents() {
-        if (!this.state.deviceId) {
-            return (
-                <DeviceRegisterer
-                    registerDeviceId={this.registerDeviceId}
-                    currentDeviceId={this.state.deviceId}
-                />
-            )
-        } else if (!this.state.imageFilename) {
-            return (
-                <FileUploader
-                    registerFile={this.registerImageFile}
-                    registeredFile={this.state.imageFile}
-                    uploadFile={this.uploadImageFile}
-                    uploadString={"Please drag a RoadX image file here or click to select."}
-                />
-            )
-        } else if (!this.state.gpsFile) {
-            return (
-                <FileUploader
-                    registerFile={this.registerGPSFile}
-                    registeredFile={this.state.gpsFile}
-                    uploadFile={this.uploadGPSFile}
-                    uploadString={"Please drag a RoadX GPS file here or click to select."}
-                />
-            )
-        }
-    }
-
-    render() {
-        return (
-            <div className="uploader__container">
-                <div className="uploader__nav">
-                    <UploaderNav
-                        states={uploaderStates}
-                        currentState={this.state.uploaderState}
-                        handleUploadStateChange={this.handleUploaderStateChange}
-                        deviceId={this.state.deviceId}
-                        runAnalysis={this.runAnalysis}
-                        canRunAnalysis={!!this.state.imageFilename}
-                    />
-                </div>
-                <div className="uploader__window">
-                    {this.renderWindowContents()}
-                </div>
-            </div>
-        )
-    }
+    // renderWindowContents() {
+    //     if (!this.state.deviceId) {
+    //         return (
+    //             <DeviceRegisterer
+    //                 registerDeviceId={this.registerDeviceId}
+    //                 currentDeviceId={this.state.deviceId}
+    //             />
+    //         )
+    //     } else if (!this.state.imageFilename) {
+    //         return (
+    //             <FileUploader
+    //                 registerFile={this.registerImageFile}
+    //                 registeredFile={this.state.imageFile}
+    //                 uploadFile={this.uploadImageFile}
+    //                 uploadString={"Please drag a RoadX image file here or click to select."}
+    //             />
+    //         )
+    //     } else if (!this.state.gpsFile) {
+    //         return (
+    //             <FileUploader
+    //                 registerFile={this.registerGPSFile}
+    //                 registeredFile={this.state.gpsFile}
+    //                 uploadFile={this.uploadGPSFile}
+    //                 uploadString={"Please drag a RoadX GPS file here or click to select."}
+    //             />
+    //         )
+    //     }
+    // }
+    //
+    // render() {
+    //     // return (
+    //     //     <div className="uploader__container">
+    //     //         <div className="uploader__nav">
+    //     //             <UploaderNav
+    //     //                 states={uploaderStates}
+    //     //                 currentState={this.state.uploaderState}
+    //     //                 handleUploadStateChange={this.handleUploaderStateChange}
+    //     //                 deviceId={this.state.deviceId}
+    //     //                 runAnalysis={this.runAnalysis}
+    //     //                 canRunAnalysis={!!this.state.imageFilename}
+    //     //             />
+    //     //         </div>
+    //     //         <div className="uploader__window">
+    //     //             {this.renderWindowContents()}
+    //     //         </div>
+    //     //     </div>
+    //     // )
+    // }
 }
