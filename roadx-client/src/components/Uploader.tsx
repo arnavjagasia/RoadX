@@ -66,7 +66,7 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
 
     uploadData = async () => {
         const timestamp: string = this.state.uploadTime.toString();
-        const imageUploadId: string = this.state.deviceId + "-images-" + timestamp.replace(/\s+/g, '-').toLowerCase();
+        const imageBatchUploadId: string = this.state.deviceId + "-images-" + timestamp.replace(/\s+/g, '-').toLowerCase();
         const imageFile: Blob = this.state.imageFile!; // Blobs allow us to pass binary data
         const gpsUploadId: string = this.state.deviceId + "-gps-" + timestamp.replace(/\s+/g, '-').toLowerCase();
         const gpsFile: Blob = this.state.gpsFile!; // Blobs allow us to pass binary data
@@ -74,7 +74,7 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
         const formData: FormData = new FormData();
         formData.append('deviceId', this.state.deviceId!)
         formData.append('timestamp', timestamp)
-        formData.append('imageUploadId', imageUploadId)
+        formData.append('imageBatchUploadId', imageBatchUploadId)
         formData.append('imageFile', imageFile)
         formData.append('gpsUploadId', gpsUploadId)
         formData.append('gpsFile', gpsFile)
@@ -90,15 +90,15 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
         )
 
         return {
-            'imageUploadId': imageUploadId, 
+            'imageBatchUploadId': imageBatchUploadId, 
             'gpsUploadId': gpsUploadId
         }
     }
 
     runAnalysis = async () => {
-        const { imageUploadId, gpsUploadId } = await this.uploadData();
+        const { imageBatchUploadId, gpsUploadId } = await this.uploadData();
         const formData: FormData = new FormData();
-        formData.append('imageUploadId', imageUploadId)
+        formData.append('imageBatchUploadId', imageBatchUploadId)
         formData.append('gpsUploadId', gpsUploadId)
         await fetch('http://localhost:5000/analyzeImage', {
             method: 'POST',
