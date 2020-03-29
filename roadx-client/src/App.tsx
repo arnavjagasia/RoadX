@@ -1,13 +1,12 @@
 import React from "react";
 import './App.css';
 import Uploader from './components/Uploader';
-import Map from './components/map';
-const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
+import Map from './components/Map';
 
 const App: React.FC = () => {
   return (
    <div className="App">
-     <Uploader/>
+     <Map/>
    </div>
   );
 }
