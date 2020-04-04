@@ -72,7 +72,8 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
         const gpsFile: Blob = this.state.gpsFile!; // Blobs allow us to pass binary data
 
         const formData: FormData = new FormData();
-        formData.append('deviceId', string(this.state.deviceId!))
+        // To:do
+        //formData.append('deviceId', string(this.state.deviceId!))
         formData.append('timestamp', timestamp)
         formData.append('imageBatchUploadId', imageBatchUploadId)
         formData.append('imageFile', imageFile)

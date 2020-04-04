@@ -3,7 +3,7 @@ import InteractiveMap, { Marker, Popup } from "react-map-gl";
 import * as potholeData from "./data/pothole.json";
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
 
-interface IMapState {
+interface MapState {
   viewport: {
     latitude: number;
     longitude: number;
@@ -13,7 +13,7 @@ interface IMapState {
   }
 }
 
-export default class Map extends React.Component<{}, IMapState> {
+export default class App extends React.Component<{}, MapState> {
   // const [viewport, setViewport] = useState({
   //   latitude: 39.953346252441406,
   //   longitude: -75.1633529663086,
@@ -22,7 +22,7 @@ export default class Map extends React.Component<{}, IMapState> {
   //   zoom: 10
   // })
 
-  state: IMapState = {
+  state : MapState = {
     viewport: {
       latitude: 39.953346252441406,
       longitude: -75.1633529663086,

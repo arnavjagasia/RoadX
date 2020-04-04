@@ -82,7 +82,7 @@ def create():
             database_data['timestamp'] = imageName
             database_data['longitude'] = longitude
             database_data['latitude'] = latitude
-            
+
         mongo.db.images.insert_one(database_data)
         counter = counter + 1
 
@@ -107,7 +107,7 @@ def analyzeImage():
     if not hasBatchId:
         return(jsonify({'ok': False, 'message': 'Bad request'}), 400)
     print("/analyze: Request Validation successful")
-    
+
 
     # Get all images for filename
     images = mongo.db.images.find({'imageBatchUploadId': imageBatchUploadId })
@@ -131,13 +131,13 @@ def analyzeImage():
         # Update mongo document about this image with classification results
         classified_filename = filename + "-classified"
         mongo.db.images.update_one(
-            {'imageFileName': filename}, 
+            {'imageFileName': filename},
             {'$set':{
                 'classifiedImageFileName': classified_filename,
                 'scores': scores
             }}
         )
-        
+
         # Save the new image
         output = io.BytesIO()
         classifiedImage.save(output, format=original_format)
@@ -149,6 +149,9 @@ def analyzeImage():
     else:
         response = {'ok': False, 'message': 'Internal Error in classification model'}
         return (jsonify(response), 500)
+
+
+
 
 # # Test that the image got stored
 # @app.route('/testRetrieve', methods=['GET'])
