@@ -7,16 +7,7 @@ import '../styles/uploader.css';
 import { Button } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 // Define Uploader States 
-=======
-// Define Uploader States
->>>>>>> mapdevelop
-=======
-
-// Define Uploader States 
->>>>>>> ebaf8f03fb0ddd64d35b51eed6ef32d8b0ab4947
 export type UploaderState = string | undefined;
 
 const DEVICE_SELECTOR_STATE: UploaderState = "Select Device";
@@ -40,23 +31,10 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
     state = {
         uploaderState: DEVICE_SELECTOR_STATE,
         uploadTime: new Date(),
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> ebaf8f03fb0ddd64d35b51eed6ef32d8b0ab4947
         deviceId: undefined,
         userId: undefined,
         imageFile: undefined,
         gpsFile: undefined,
-<<<<<<< HEAD
-=======
-        deviceId: 0,
-        userId: 0,
-        imageFile: new File(null, null),
-        gpsFile: new File(null, null),
->>>>>>> mapdevelop
-=======
->>>>>>> ebaf8f03fb0ddd64d35b51eed6ef32d8b0ab4947
     };
 
     handleUploaderStateChange = (newState: UploaderState) => {
@@ -75,30 +53,14 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
     registerImageFile = (imageFile: File) => {
         this.setState({
             imageFile: imageFile,
-<<<<<<< HEAD
-<<<<<<< HEAD
             uploaderState: GPS_UPLOADER_STATE, 
-=======
-            uploaderState: GPS_UPLOADER_STATE,
->>>>>>> mapdevelop
-=======
-            uploaderState: GPS_UPLOADER_STATE, 
->>>>>>> ebaf8f03fb0ddd64d35b51eed6ef32d8b0ab4947
         })
     }
 
     registerGPSFile = (gpsFile: File) => {
         this.setState({
             gpsFile: gpsFile,
-<<<<<<< HEAD
-<<<<<<< HEAD
             uploaderState: DISCOVERY_STATE, 
-=======
-            uploaderState: DISCOVERY_STATE,
->>>>>>> mapdevelop
-=======
-            uploaderState: DISCOVERY_STATE, 
->>>>>>> ebaf8f03fb0ddd64d35b51eed6ef32d8b0ab4947
         })
     }
 
@@ -110,7 +72,7 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
         const gpsFile: Blob = this.state.gpsFile!; // Blobs allow us to pass binary data
 
         const formData: FormData = new FormData();
-        formData.append('deviceId', string(this.state.deviceId!))
+        formData.append('deviceId', this.state.deviceId!)
         formData.append('timestamp', timestamp)
         formData.append('imageBatchUploadId', imageBatchUploadId)
         formData.append('imageFile', imageFile)
@@ -128,15 +90,7 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
         )
 
         return {
-<<<<<<< HEAD
-<<<<<<< HEAD
             'imageBatchUploadId': imageBatchUploadId, 
-=======
-            'imageBatchUploadId': imageBatchUploadId,
->>>>>>> mapdevelop
-=======
-            'imageBatchUploadId': imageBatchUploadId, 
->>>>>>> ebaf8f03fb0ddd64d35b51eed6ef32d8b0ab4947
             'gpsUploadId': gpsUploadId
         }
     }
@@ -158,39 +112,17 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
     }
 
     renderWindowContents() {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> ebaf8f03fb0ddd64d35b51eed6ef32d8b0ab4947
         const { uploaderState, deviceId } = this.state; 
         if (uploaderState === DEVICE_SELECTOR_STATE) {
             return (
                 <DeviceRegisterer 
                     registerDeviceId={this.registerDeviceId} 
-<<<<<<< HEAD
-=======
-        const { uploaderState, deviceId } = this.state;
-        if (uploaderState === DEVICE_SELECTOR_STATE) {
-            return (
-                <DeviceRegisterer
-                    registerDeviceId={this.registerDeviceId}
->>>>>>> mapdevelop
-=======
->>>>>>> ebaf8f03fb0ddd64d35b51eed6ef32d8b0ab4947
                     currentDeviceId={deviceId}
                 />
             )
         } else if (uploaderState === IMAGE_UPLOADER_STATE) {
             return (
-<<<<<<< HEAD
-<<<<<<< HEAD
                 <FileUploader 
-=======
-                <FileUploader
->>>>>>> mapdevelop
-=======
-                <FileUploader 
->>>>>>> ebaf8f03fb0ddd64d35b51eed6ef32d8b0ab4947
                     key={1}
                     registerFile={this.registerImageFile}
                     uploadString={"Click to select a RoadX Image Zip File."}
@@ -199,15 +131,7 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
             )
         } else if (uploaderState === GPS_UPLOADER_STATE) {
             return (
-<<<<<<< HEAD
-<<<<<<< HEAD
                 <FileUploader 
-=======
-                <FileUploader
->>>>>>> mapdevelop
-=======
-                <FileUploader 
->>>>>>> ebaf8f03fb0ddd64d35b51eed6ef32d8b0ab4947
                     key={2}
                     registerFile={this.registerGPSFile}
                     uploadString={"Click to select a RoadX GPS File."}
@@ -216,15 +140,7 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
             )
         } else if (uploaderState === DISCOVERY_STATE) {
             return (
-<<<<<<< HEAD
-<<<<<<< HEAD
                 <Button 
-=======
-                <Button
->>>>>>> mapdevelop
-=======
-                <Button 
->>>>>>> ebaf8f03fb0ddd64d35b51eed6ef32d8b0ab4947
                     className="uploader__discovery_button"
                     text={"Run Automated Discovery"}
                     large={true}
@@ -240,7 +156,7 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
         return (
             <div className="uploader__container">
                 <div className="uploader__nav">
-                    <UploaderNav
+                    <UploaderNav 
                         states={uploaderStates}
                         currentState={this.state.uploaderState}
                         handleUploadStateChange={this.handleUploaderStateChange}
@@ -252,5 +168,5 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
                 </div>
             </div>
         )
-    }
+    }   
 }
