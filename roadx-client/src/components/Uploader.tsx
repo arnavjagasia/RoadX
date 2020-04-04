@@ -64,109 +64,109 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
         })
     }
 
-    // uploadData = async () => {
-    //     const timestamp: string = this.state.uploadTime.toString();
-    //     const imageBatchUploadId: string = this.state.deviceId + "-images-" + timestamp.replace(/\s+/g, '-').toLowerCase();
-    //     const imageFile: Blob = this.state.imageFile!; // Blobs allow us to pass binary data
-    //     const gpsUploadId: string = this.state.deviceId + "-gps-" + timestamp.replace(/\s+/g, '-').toLowerCase();
-    //     const gpsFile: Blob = this.state.gpsFile!; // Blobs allow us to pass binary data
-    //
-    //     const formData: FormData = new FormData();
-    //     formData.append('deviceId', this.state.deviceId!)
-    //     formData.append('timestamp', timestamp)
-    //     formData.append('imageBatchUploadId', imageBatchUploadId)
-    //     formData.append('imageFile', imageFile)
-    //     formData.append('gpsUploadId', gpsUploadId)
-    //     formData.append('gpsFile', gpsFile)
-    //
-    //     await fetch('http://localhost:5000/create', {
-    //         method: 'POST',
-    //         mode: 'no-cors', // cannot pass headers with no-cors
-    //         body: formData,
-    //     }).then(response => {
-    //         console.log(response)
-    //     }).catch((reason) =>
-    //         console.log(reason)
-    //     )
-    //
-    //     return {
-    //         'imageBatchUploadId': imageBatchUploadId,
-    //         'gpsUploadId': gpsUploadId
-    //     }
-    // }
-    //
-    // runAnalysis = async () => {
-    //     const { imageBatchUploadId, gpsUploadId } = await this.uploadData();
-    //     const formData: FormData = new FormData();
-    //     formData.append('imageBatchUploadId', imageBatchUploadId)
-    //     formData.append('gpsUploadId', gpsUploadId)
-    //     await fetch('http://localhost:5000/analyzeImage', {
-    //         method: 'POST',
-    //         mode: 'no-cors', // cannot pass headers with no-cors
-    //         body: formData
-    //     }).then(response => {
-    //         console.log(response)
-    //     }).catch((reason) =>
-    //         console.log(reason)
-    //     )
-    // }
+    uploadData = async () => {
+        const timestamp: string = this.state.uploadTime.toString();
+        const imageBatchUploadId: string = this.state.deviceId + "-images-" + timestamp.replace(/\s+/g, '-').toLowerCase();
+        const imageFile: Blob = this.state.imageFile!; // Blobs allow us to pass binary data
+        const gpsUploadId: string = this.state.deviceId + "-gps-" + timestamp.replace(/\s+/g, '-').toLowerCase();
+        const gpsFile: Blob = this.state.gpsFile!; // Blobs allow us to pass binary data
 
-    // renderWindowContents() {
-    //     const { uploaderState, deviceId } = this.state;
-    //     if (uploaderState === DEVICE_SELECTOR_STATE) {
-    //         return (
-    //             <DeviceRegisterer
-    //                 registerDeviceId={this.registerDeviceId}
-    //                 currentDeviceId={deviceId}
-    //             />
-    //         )
-    //     } else if (uploaderState === IMAGE_UPLOADER_STATE) {
-    //         return (
-    //             <FileUploader
-    //                 key={1}
-    //                 registerFile={this.registerImageFile}
-    //                 uploadString={"Click to select a RoadX Image Zip File."}
-    //                 permittedFileExtensions={["application/zip"]}
-    //             />
-    //         )
-    //     } else if (uploaderState === GPS_UPLOADER_STATE) {
-    //         return (
-    //             <FileUploader
-    //                 key={2}
-    //                 registerFile={this.registerGPSFile}
-    //                 uploadString={"Click to select a RoadX GPS File."}
-    //                 permittedFileExtensions={["text/csv"]}
-    //             />
-    //         )
-    //     } else if (uploaderState === DISCOVERY_STATE) {
-    //         return (
-    //             <Button
-    //                 className="uploader__discovery_button"
-    //                 text={"Run Automated Discovery"}
-    //                 large={true}
-    //                 disabled={!this.state.imageFile || !this.state.gpsFile}
-    //                 icon={IconNames.GRAPH}
-    //                 onClick={this.runAnalysis}
-    //             />
-    //         )
-    //     }
-    // }
-    //
-    // render() {
-    //     return (
-    //         <div className="uploader__container">
-    //             <div className="uploader__nav">
-    //                 <UploaderNav
-    //                     states={uploaderStates}
-    //                     currentState={this.state.uploaderState}
-    //                     handleUploadStateChange={this.handleUploaderStateChange}
-    //                     deviceId={this.state.deviceId}
-    //                 />
-    //             </div>
-    //             <div className="uploader__window">
-    //                 {this.renderWindowContents()}
-    //             </div>
-    //         </div>
-    //     )
-    // }
+        const formData: FormData = new FormData();
+        formData.append('deviceId', string(this.state.deviceId!))
+        formData.append('timestamp', timestamp)
+        formData.append('imageBatchUploadId', imageBatchUploadId)
+        formData.append('imageFile', imageFile)
+        formData.append('gpsUploadId', gpsUploadId)
+        formData.append('gpsFile', gpsFile)
+
+        await fetch('http://localhost:5000/create', {
+            method: 'POST',
+            mode: 'no-cors', // cannot pass headers with no-cors
+            body: formData,
+        }).then(response => {
+            console.log(response)
+        }).catch((reason) =>
+            console.log(reason)
+        )
+
+        return {
+            'imageBatchUploadId': imageBatchUploadId,
+            'gpsUploadId': gpsUploadId
+        }
+    }
+
+    runAnalysis = async () => {
+        const { imageBatchUploadId, gpsUploadId } = await this.uploadData();
+        const formData: FormData = new FormData();
+        formData.append('imageBatchUploadId', imageBatchUploadId)
+        formData.append('gpsUploadId', gpsUploadId)
+        await fetch('http://localhost:5000/analyzeImage', {
+            method: 'POST',
+            mode: 'no-cors', // cannot pass headers with no-cors
+            body: formData
+        }).then(response => {
+            console.log(response)
+        }).catch((reason) =>
+            console.log(reason)
+        )
+    }
+
+    renderWindowContents() {
+        const { uploaderState, deviceId } = this.state;
+        if (uploaderState === DEVICE_SELECTOR_STATE) {
+            return (
+                <DeviceRegisterer
+                    registerDeviceId={this.registerDeviceId}
+                    currentDeviceId={deviceId}
+                />
+            )
+        } else if (uploaderState === IMAGE_UPLOADER_STATE) {
+            return (
+                <FileUploader
+                    key={1}
+                    registerFile={this.registerImageFile}
+                    uploadString={"Click to select a RoadX Image Zip File."}
+                    permittedFileExtensions={["application/zip"]}
+                />
+            )
+        } else if (uploaderState === GPS_UPLOADER_STATE) {
+            return (
+                <FileUploader
+                    key={2}
+                    registerFile={this.registerGPSFile}
+                    uploadString={"Click to select a RoadX GPS File."}
+                    permittedFileExtensions={["text/csv"]}
+                />
+            )
+        } else if (uploaderState === DISCOVERY_STATE) {
+            return (
+                <Button
+                    className="uploader__discovery_button"
+                    text={"Run Automated Discovery"}
+                    large={true}
+                    disabled={!this.state.imageFile || !this.state.gpsFile}
+                    icon={IconNames.GRAPH}
+                    onClick={this.runAnalysis}
+                />
+            )
+        }
+    }
+
+    render() {
+        return (
+            <div className="uploader__container">
+                <div className="uploader__nav">
+                    <UploaderNav
+                        states={uploaderStates}
+                        currentState={this.state.uploaderState}
+                        handleUploadStateChange={this.handleUploaderStateChange}
+                        deviceId={this.state.deviceId}
+                    />
+                </div>
+                <div className="uploader__window">
+                    {this.renderWindowContents()}
+                </div>
+            </div>
+        )
+    }
 }
