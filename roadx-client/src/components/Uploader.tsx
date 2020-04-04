@@ -7,7 +7,7 @@ import '../styles/uploader.css';
 import { Button } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 
-// Define Uploader States 
+// Define Uploader States
 export type UploaderState = string | undefined;
 
 const DEVICE_SELECTOR_STATE: UploaderState = "Select Device";
@@ -21,14 +21,14 @@ interface IUploaderState {
     uploaderState: UploaderState;
     uploadTime: Date;
     userId?: number;
-    deviceId?: number;
+    deviceId?: number | undefined;
     imageFile?: File;
     gpsFile?: File;
 }
 
 export default class Uploader extends React.Component<{}, IUploaderState> {
     // Initialize state when component mounts
-    state = {
+    state: IUploaderState = {
         uploaderState: DEVICE_SELECTOR_STATE,
         uploadTime: new Date(),
         deviceId: undefined,
@@ -53,14 +53,14 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
     registerImageFile = (imageFile: File) => {
         this.setState({
             imageFile: imageFile,
-            uploaderState: GPS_UPLOADER_STATE, 
+            uploaderState: GPS_UPLOADER_STATE,
         })
     }
 
     registerGPSFile = (gpsFile: File) => {
         this.setState({
             gpsFile: gpsFile,
-            uploaderState: DISCOVERY_STATE, 
+            uploaderState: DISCOVERY_STATE,
         })
     }
 
@@ -72,7 +72,7 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
         const gpsFile: Blob = this.state.gpsFile!; // Blobs allow us to pass binary data
 
         const formData: FormData = new FormData();
-        formData.append('deviceId', this.state.deviceId!)
+        formData.append('deviceId', string(this.state.deviceId!))
         formData.append('timestamp', timestamp)
         formData.append('imageBatchUploadId', imageBatchUploadId)
         formData.append('imageFile', imageFile)
@@ -90,7 +90,7 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
         )
 
         return {
-            'imageBatchUploadId': imageBatchUploadId, 
+            'imageBatchUploadId': imageBatchUploadId,
             'gpsUploadId': gpsUploadId
         }
     }
@@ -112,17 +112,17 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
     }
 
     renderWindowContents() {
-        const { uploaderState, deviceId } = this.state; 
+        const { uploaderState, deviceId } = this.state;
         if (uploaderState === DEVICE_SELECTOR_STATE) {
             return (
-                <DeviceRegisterer 
-                    registerDeviceId={this.registerDeviceId} 
+                <DeviceRegisterer
+                    registerDeviceId={this.registerDeviceId}
                     currentDeviceId={deviceId}
                 />
             )
         } else if (uploaderState === IMAGE_UPLOADER_STATE) {
             return (
-                <FileUploader 
+                <FileUploader
                     key={1}
                     registerFile={this.registerImageFile}
                     uploadString={"Click to select a RoadX Image Zip File."}
@@ -131,7 +131,7 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
             )
         } else if (uploaderState === GPS_UPLOADER_STATE) {
             return (
-                <FileUploader 
+                <FileUploader
                     key={2}
                     registerFile={this.registerGPSFile}
                     uploadString={"Click to select a RoadX GPS File."}
@@ -140,7 +140,7 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
             )
         } else if (uploaderState === DISCOVERY_STATE) {
             return (
-                <Button 
+                <Button
                     className="uploader__discovery_button"
                     text={"Run Automated Discovery"}
                     large={true}
@@ -156,7 +156,7 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
         return (
             <div className="uploader__container">
                 <div className="uploader__nav">
-                    <UploaderNav 
+                    <UploaderNav
                         states={uploaderStates}
                         currentState={this.state.uploaderState}
                         handleUploadStateChange={this.handleUploaderStateChange}
@@ -168,5 +168,5 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
                 </div>
             </div>
         )
-    }   
+    }
 }

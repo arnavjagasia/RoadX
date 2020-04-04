@@ -24,13 +24,13 @@ class NavItem extends React.Component<IUploaderNavItemProps, {}> {
     render() {
         if (this.props.isDisabled) {
             return (
-                <Card className="uploader__nav_item uploader__nav_item--disabled"> 
+                <Card className="uploader__nav_item uploader__nav_item--disabled">
                     <p>{this.props.uploaderState}</p>
                 </Card>
             )
         } else if (this.props.isCurrent) {
             return (
-                <Card 
+                <Card
                     className="uploader__nav_item uploader__nav_item--current"
                     onClick={this.props.handleUploadStateChange}
                 >
@@ -39,7 +39,7 @@ class NavItem extends React.Component<IUploaderNavItemProps, {}> {
             )
         } else {
             return (
-                <Card 
+                <Card
                     className="uploader__nav_item"
                     onClick={this.props.handleUploadStateChange}
                 >
@@ -80,9 +80,9 @@ export default class UploaderNav extends React.Component<IUploaderNavProps, {}> 
             <div className="uploader__nav_metadata_section">
                 <div className="uploader__nav_title"> RoadX Data Upload Portal </div>
                 {
-                    this.props.deviceId && 
-                    <div className="uploader__nav_metadata_item"> 
-                        Device Id: {this.props.deviceId} 
+                    this.props.deviceId &&
+                    <div className="uploader__nav_metadata_item">
+                        Device Id: {this.props.deviceId}
                     </div>
                 }
             </div>
