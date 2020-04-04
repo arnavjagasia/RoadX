@@ -4,90 +4,80 @@ import FileUploader from './FileUploader';
 import DeviceRegisterer from './DeviceRegisterer';
 
 import '../styles/uploader.css';
-import { Toaster, Intent } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
+import { IconNames } from '@blueprintjs/icons';
 
-const uploaderStates: Array<string> = [
-    "Select Device",
-    "Upload Image Files",
-    "Upload GPS Files"
-]
+// Define Uploader States 
+export type UploaderState = string | undefined;
+
+const DEVICE_SELECTOR_STATE: UploaderState = "Select Device";
+const IMAGE_UPLOADER_STATE: UploaderState = "Upload Image Files";
+const GPS_UPLOADER_STATE: UploaderState = "Upload GPS Files";
+const DISCOVERY_STATE: UploaderState = "Defect Discovery";
+
+const uploaderStates: Array<UploaderState> = [DEVICE_SELECTOR_STATE, IMAGE_UPLOADER_STATE, GPS_UPLOADER_STATE, DISCOVERY_STATE];
 
 interface IUploaderState {
-    uploaderState: number;
+    uploaderState: UploaderState;
     uploadTime: Date;
     userId?: number;
     deviceId?: number;
     imageFile?: File;
-    imageFilename?: string;
     gpsFile?: File;
 }
-
-const toaster = Toaster.create()
 
 export default class Uploader extends React.Component<{}, IUploaderState> {
     // Initialize state when component mounts
     state = {
-        uploaderState: 0,
+        uploaderState: DEVICE_SELECTOR_STATE,
         uploadTime: new Date(),
         deviceId: undefined,
         userId: undefined,
         imageFile: undefined,
-        imageFilename: undefined,
         gpsFile: undefined,
     };
 
-    handleUploaderStateChange = (stateNumber: number) => {
+    handleUploaderStateChange = (newState: UploaderState) => {
         this.setState({
-            uploaderState: stateNumber
+            uploaderState: newState
         })
     }
 
     registerDeviceId = (deviceId: Number) => {
         this.setState({
             deviceId: deviceId as number,
-            uploaderState: 1, // Can move from device registration to uploading files
+            uploaderState: IMAGE_UPLOADER_STATE,
         })
     }
 
     registerImageFile = (imageFile: File) => {
         this.setState({
-            imageFile: imageFile
+            imageFile: imageFile,
+            uploaderState: GPS_UPLOADER_STATE, 
         })
     }
 
     registerGPSFile = (gpsFile: File) => {
         this.setState({
-            gpsFile: gpsFile
+            gpsFile: gpsFile,
+            uploaderState: DISCOVERY_STATE, 
         })
     }
 
-    uploadImageFile = async () => {
-        if (!this.state.deviceId) {
-            const toastProps = {
-                'message': 'Please select a device!',
-                'intent': Intent.WARNING,
-            }
-            toaster.show(toastProps)
-            return
-        }
-        if (!this.state.imageFile) {
-            const toastProps = {
-                'message': 'Please select an image file!',
-                'intent': Intent.WARNING,
-            }
-            toaster.show(toastProps)
-            return
-        }
-        
+    uploadData = async () => {
         const timestamp: string = this.state.uploadTime.toString();
-        const filename: string = this.state.deviceId + "-" + timestamp.replace(/\s+/g, '-').toLowerCase();
-        const fileBlob: Blob = this.state.imageFile!; // Blobs allow us to pass binary data
+        const imageBatchUploadId: string = this.state.deviceId + "-images-" + timestamp.replace(/\s+/g, '-').toLowerCase();
+        const imageFile: Blob = this.state.imageFile!; // Blobs allow us to pass binary data
+        const gpsUploadId: string = this.state.deviceId + "-gps-" + timestamp.replace(/\s+/g, '-').toLowerCase();
+        const gpsFile: Blob = this.state.gpsFile!; // Blobs allow us to pass binary data
 
         const formData: FormData = new FormData();
         formData.append('deviceId', this.state.deviceId!)
         formData.append('timestamp', timestamp)
-        formData.append('filename', filename)
-        formData.append('file', fileBlob)
+        formData.append('imageBatchUploadId', imageBatchUploadId)
+        formData.append('imageFile', imageFile)
+        formData.append('gpsUploadId', gpsUploadId)
+        formData.append('gpsFile', gpsFile)
 
         await fetch('http://localhost:5000/create', {
             method: 'POST',
@@ -99,33 +89,17 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
             console.log(reason)
         )
 
-        this.setState({
-            uploaderState: 2, // Switch to gps data window
-            imageFilename: filename,
-        }, () => console.log("analysis"))
-    }
-
-    uploadGPSFile = async () => {
-        if (!this.state.gpsFile) {
-            const toastProps = {
-                'message': 'Please select a GPS file!',
-                'intent': Intent.WARNING,
-            }
-            toaster.show(toastProps)
-            return
+        return {
+            'imageBatchUploadId': imageBatchUploadId, 
+            'gpsUploadId': gpsUploadId
         }
-    
-        // FETCH FOR GPS DATA -- APPEND TO EXISTING DOC
-        // OR, send all together at this point
-
-        this.setState({
-            uploaderState: 3, // Done with workflow
-        }, () => console.log("analysis"))
     }
 
     runAnalysis = async () => {
+        const { imageBatchUploadId, gpsUploadId } = await this.uploadData();
         const formData: FormData = new FormData();
-        formData.append('filename', this.state.imageFilename!)
+        formData.append('imageBatchUploadId', imageBatchUploadId)
+        formData.append('gpsUploadId', gpsUploadId)
         await fetch('http://localhost:5000/analyzeImage', {
             method: 'POST',
             mode: 'no-cors', // cannot pass headers with no-cors
@@ -138,29 +112,41 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
     }
 
     renderWindowContents() {
-        if (!this.state.deviceId) {
+        const { uploaderState, deviceId } = this.state; 
+        if (uploaderState === DEVICE_SELECTOR_STATE) {
             return (
                 <DeviceRegisterer 
                     registerDeviceId={this.registerDeviceId} 
-                    currentDeviceId={this.state.deviceId}
+                    currentDeviceId={deviceId}
                 />
             )
-        } else if (!this.state.imageFilename) {
+        } else if (uploaderState === IMAGE_UPLOADER_STATE) {
             return (
                 <FileUploader 
+                    key={1}
                     registerFile={this.registerImageFile}
-                    registeredFile={this.state.imageFile}
-                    uploadFile={this.uploadImageFile}
-                    uploadString={"Please drag a RoadX image file here or click to select."}
+                    uploadString={"Click to select a RoadX Image Zip File."}
+                    permittedFileExtensions={["application/zip"]}
                 />
             )
-        } else if (!this.state.gpsFile) {
+        } else if (uploaderState === GPS_UPLOADER_STATE) {
             return (
                 <FileUploader 
+                    key={2}
                     registerFile={this.registerGPSFile}
-                    registeredFile={this.state.gpsFile}
-                    uploadFile={this.uploadGPSFile}
-                    uploadString={"Please drag a RoadX GPS file here or click to select."}
+                    uploadString={"Click to select a RoadX GPS File."}
+                    permittedFileExtensions={["text/csv"]}
+                />
+            )
+        } else if (uploaderState === DISCOVERY_STATE) {
+            return (
+                <Button 
+                    className="uploader__discovery_button"
+                    text={"Run Automated Discovery"}
+                    large={true}
+                    disabled={!this.state.imageFile || !this.state.gpsFile}
+                    icon={IconNames.GRAPH}
+                    onClick={this.runAnalysis}
                 />
             )
         }
@@ -175,8 +161,6 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
                         currentState={this.state.uploaderState}
                         handleUploadStateChange={this.handleUploaderStateChange}
                         deviceId={this.state.deviceId}
-                        runAnalysis={this.runAnalysis}
-                        canRunAnalysis={!!this.state.imageFilename}
                     />
                 </div>
                 <div className="uploader__window">
