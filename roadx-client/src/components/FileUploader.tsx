@@ -41,7 +41,7 @@ export interface IFileUploaderState {
 const toaster = Toaster.create()
 
 export default class FileUploader extends React.Component<IFileUploaderProps, IFileUploaderState> {
-  state = {
+  state: IFileUploaderState = {
     registeredFile: undefined,
   }
 
