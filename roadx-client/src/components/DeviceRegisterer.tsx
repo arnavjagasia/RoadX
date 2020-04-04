@@ -11,6 +11,7 @@ interface IDeviceRegistererProps {
 
 const DeviceSelector = Select.ofType<Number>();
 
+
 // Hard-coding device id's for now
 const devices: number[] = [1, 2, 4, 10, 50, 67]
 export const renderDevice: ItemRenderer<Number> = (deviceId, { handleClick, modifiers, query }) => {
@@ -35,19 +36,19 @@ export default class DeviceRegisterer extends React.Component<IDeviceRegistererP
     }
 
     renderDeviceSelector() {
-        const selectorText: string = this.props.currentDeviceId ? 
-        `Device #${this.props.currentDeviceId}` : 
+        const selectorText: string = this.props.currentDeviceId ?
+        `Device #${this.props.currentDeviceId}` :
         "Select a device..."
         return (
             <div className="registerer__selector">
-                <DeviceSelector 
+                <DeviceSelector
                     items={devices}
                     itemRenderer={renderDevice}
                     onItemSelect={this.props.registerDeviceId}
                 >
-                    <Button 
-                        text={selectorText} 
-                        rightIcon="double-caret-vertical" 
+                    <Button
+                        text={selectorText}
+                        rightIcon="double-caret-vertical"
                         large={true}
                     />
                 </DeviceSelector>
@@ -59,8 +60,8 @@ export default class DeviceRegisterer extends React.Component<IDeviceRegistererP
         return (
             <div className="registerer__container">
                 {this.renderText()}
-                { this.renderDeviceSelector() }    
+                { this.renderDeviceSelector() }
             </div>
         )
-    } 
+    }
 }

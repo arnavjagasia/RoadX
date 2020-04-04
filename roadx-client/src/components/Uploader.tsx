@@ -7,6 +7,7 @@ import '../styles/uploader.css';
 import { Button } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 
+
 // Define Uploader States 
 export type UploaderState = string | undefined;
 
@@ -72,7 +73,7 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
         const gpsFile: Blob = this.state.gpsFile!; // Blobs allow us to pass binary data
 
         const formData: FormData = new FormData();
-        formData.append('deviceId', this.state.deviceId!)
+        formData.append('deviceId', string(this.state.deviceId!))
         formData.append('timestamp', timestamp)
         formData.append('imageBatchUploadId', imageBatchUploadId)
         formData.append('imageFile', imageFile)
@@ -156,7 +157,7 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
         return (
             <div className="uploader__container">
                 <div className="uploader__nav">
-                    <UploaderNav 
+                    <UploaderNav
                         states={uploaderStates}
                         currentState={this.state.uploaderState}
                         handleUploadStateChange={this.handleUploaderStateChange}
@@ -168,5 +169,5 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
                 </div>
             </div>
         )
-    }   
+    }
 }
