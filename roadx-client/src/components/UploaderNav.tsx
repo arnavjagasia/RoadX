@@ -26,12 +26,17 @@ class NavItem extends React.Component<IUploaderNavItemProps, {}> {
         if (this.props.isDisabled) {
             return (
 <<<<<<< HEAD
+<<<<<<< HEAD
                 <Card className="uploader__nav_item uploader__nav_item--disabled"> 
                     <p>{this.props.uploaderState}</p>
 =======
                 <Card className="uploader__nav_item uploader__nav_item--disabled">
                     <p>{this.props.stateName}</p>
 >>>>>>> mapdevelop
+=======
+                <Card className="uploader__nav_item uploader__nav_item--disabled"> 
+                    <p>{this.props.uploaderState}</p>
+>>>>>>> ebaf8f03fb0ddd64d35b51eed6ef32d8b0ab4947
                 </Card>
             )
         } else if (this.props.isCurrent) {
@@ -96,7 +101,10 @@ export default class UploaderNav extends React.Component<IUploaderNavProps, {}> 
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> ebaf8f03fb0ddd64d35b51eed6ef32d8b0ab4947
     renderDiscoveryButton() {
         return (
             <Button
@@ -123,17 +131,25 @@ export default class UploaderNav extends React.Component<IUploaderNavProps, {}> 
         )
     }
 
+<<<<<<< HEAD
 >>>>>>> mapdevelop
+=======
+>>>>>>> ebaf8f03fb0ddd64d35b51eed6ef32d8b0ab4947
     render() {
         return (
             <div className="uploader__nav_contents">
                 {this.renderUploadMetadata()}
                 {this.renderFormattedNavStates()}
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                 {this.renderDiscoveryButton()}
                 {this.renderMapVisualization()}
 >>>>>>> mapdevelop
+=======
+                {this.renderDiscoveryButton()}
+                {this.renderMapVisualization()}
+>>>>>>> ebaf8f03fb0ddd64d35b51eed6ef32d8b0ab4947
             </div>
         )
     }
