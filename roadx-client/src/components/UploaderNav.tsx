@@ -3,6 +3,7 @@ import { Card, Icon } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 
 
+
 import "../styles/uploader.css";
 import { UploaderState } from './Uploader';
 
@@ -24,13 +25,18 @@ class NavItem extends React.Component<IUploaderNavItemProps, {}> {
     render() {
         if (this.props.isDisabled) {
             return (
+<<<<<<< HEAD
                 <Card className="uploader__nav_item uploader__nav_item--disabled"> 
                     <p>{this.props.uploaderState}</p>
+=======
+                <Card className="uploader__nav_item uploader__nav_item--disabled">
+                    <p>{this.props.stateName}</p>
+>>>>>>> mapdevelop
                 </Card>
             )
         } else if (this.props.isCurrent) {
             return (
-                <Card 
+                <Card
                     className="uploader__nav_item uploader__nav_item--current"
                     onClick={this.props.handleUploadStateChange}
                 >
@@ -39,7 +45,7 @@ class NavItem extends React.Component<IUploaderNavItemProps, {}> {
             )
         } else {
             return (
-                <Card 
+                <Card
                     className="uploader__nav_item"
                     onClick={this.props.handleUploadStateChange}
                 >
@@ -80,20 +86,54 @@ export default class UploaderNav extends React.Component<IUploaderNavProps, {}> 
             <div className="uploader__nav_metadata_section">
                 <div className="uploader__nav_title"> RoadX Data Upload Portal </div>
                 {
-                    this.props.deviceId && 
-                    <div className="uploader__nav_metadata_item"> 
-                        Device Id: {this.props.deviceId} 
+                    this.props.deviceId &&
+                    <div className="uploader__nav_metadata_item">
+                        Device Id: {this.props.deviceId}
                     </div>
                 }
             </div>
         )
     }
 
+<<<<<<< HEAD
+=======
+    renderDiscoveryButton() {
+        return (
+            <Button
+                className="uploader__discovery_button"
+                text={"Run Discovery"}
+                large={true}
+                disabled={!this.props.canRunAnalysis}
+                icon={IconNames.GRAPH}
+                onClick={this.props.runAnalysis}
+            />
+        )
+    }
+
+    renderMapVisualization() {
+        return (
+            <Button
+                className="uploader__map_visualization_button"
+                text={"Run Map Visualization"}
+                large={true}
+                disabled={!this.props.canRunAnalysis}
+                icon={IconNames.GRAPH}
+                onClick={this.props.runAnalysis}
+            />
+        )
+    }
+
+>>>>>>> mapdevelop
     render() {
         return (
             <div className="uploader__nav_contents">
                 {this.renderUploadMetadata()}
                 {this.renderFormattedNavStates()}
+<<<<<<< HEAD
+=======
+                {this.renderDiscoveryButton()}
+                {this.renderMapVisualization()}
+>>>>>>> mapdevelop
             </div>
         )
     }

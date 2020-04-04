@@ -39,6 +39,10 @@
     margin: 1em;
 }
 
+.uploader__map_visualization_button{
+    margin: 1em;
+}
+
 /* Styles for Metadata at top of Nav */
 .uploader__nav_metadata_section {
     display: flex;
@@ -50,7 +54,7 @@
     display: flex;
     font-size: 2em;
     font-weight: bold;
-    color: white; 
+    color: white;
     justify-content: center;
     text-align: center;
 }
@@ -58,7 +62,7 @@
 .uploader__nav_metadata_item {
     display: flex;
     font-size: 1.2em;
-    color: white; 
+    color: white;
     padding: 1em;
     justify-content: center;
     text-transform: uppercase;
