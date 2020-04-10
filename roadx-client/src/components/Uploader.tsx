@@ -73,7 +73,7 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
 
         const formData: FormData = new FormData();
         // To:do
-        //formData.append('deviceId', string(this.state.deviceId!))
+        formData.append('deviceId', String(this.state.deviceId!))
         formData.append('timestamp', timestamp)
         formData.append('imageBatchUploadId', imageBatchUploadId)
         formData.append('imageFile', imageFile)

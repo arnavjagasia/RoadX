@@ -1,7 +1,30 @@
 import React, { useState, useEffect } from "react";
 import InteractiveMap, { Marker, Popup } from "react-map-gl";
+import MapGL, {NavigationControl, FullscreenControl, ScaleControl} from 'react-map-gl';
+import ControlPanel from './Control-Panel';
 import * as potholeData from "./data/pothole.json";
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
+
+const fullscreenControlStyle = {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  padding: '10px'
+};
+
+const navStyle = {
+  position: 'absolute',
+  top: 36,
+  left: 0,
+  padding: '10px'
+};
+
+const scaleControlStyle = {
+  position: 'absolute',
+  bottom: 36,
+  left: 0,
+  padding: '10px'
+};
 
 interface MapState {
   viewport: {
@@ -10,8 +33,11 @@ interface MapState {
     // width: number;
     // height: number;
     zoom: number;
-  }
+  },
+  popupInfo: any
 }
+
+
 
 export default class App extends React.Component<{}, MapState> {
   // const [viewport, setViewport] = useState({
@@ -29,7 +55,8 @@ export default class App extends React.Component<{}, MapState> {
       // width: "100%",
       // height: "100%"",
       zoom: 10
-    }
+    },
+    popupInfo: null
   }
 
  //const [selectedPothole, setSelectedPothole] = useState(null);
@@ -51,6 +78,35 @@ export default class App extends React.Component<{}, MapState> {
  //   </Popup>
  // )}:
 
+ // <div style={fullscreenControlStyle}>
+ //   <FullscreenControl />
+ // </div>
+ // <div style={navStyle}>
+ //   <NavigationControl />
+ // </div>
+ // <div style={scaleControlStyle}>
+ //   <ScaleControl />
+ // </div>
+ // <ControlPanel containerComponent={this.props.containerComponent} />
+
+ _renderPopup() {
+    const {popupInfo} = this.state;
+
+    return (
+      popupInfo && (
+        <Popup
+          tipSize={5}
+          anchor="top"
+          longitude={popupInfo.longitude}
+          latitude={popupInfo.latitude}
+          closeOnClick={false}
+          onClose={() => this.setState({popupInfo: null})}
+        >
+
+        </Popup>
+      )
+    );
+  }
 
   public render() {
   return (
