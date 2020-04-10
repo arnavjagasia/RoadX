@@ -6,6 +6,7 @@ import DeviceRegisterer from './DeviceRegisterer';
 import '../../styles/uploader.css';
 import { Button } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
+import { ICreateParams, create, IAnalyzeImageParams, analyzeImage } from '../../api/api';
 
 // Define Uploader States
 export type UploaderState = string | undefined;
@@ -64,51 +65,69 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
         })
     }
 
-    uploadData = async () => {
-        const timestamp: string = this.state.uploadTime.toString();
-        const imageBatchUploadId: string = this.state.deviceId + "-images-" + timestamp.replace(/\s+/g, '-').toLowerCase();
-        const imageFile: Blob = this.state.imageFile!; // Blobs allow us to pass binary data
-        const gpsUploadId: string = this.state.deviceId + "-gps-" + timestamp.replace(/\s+/g, '-').toLowerCase();
-        const gpsFile: Blob = this.state.gpsFile!; // Blobs allow us to pass binary data
+    // uploadData = async () => {
+    //     const timestamp: string = this.state.uploadTime.toString();
+    //     const imageBatchUploadId: string = this.state.deviceId + "-images-" + timestamp.replace(/\s+/g, '-').toLowerCase();
+    //     const imageFile: Blob = this.state.imageFile!; // Blobs allow us to pass binary data
+    //     const gpsUploadId: string = this.state.deviceId + "-gps-" + timestamp.replace(/\s+/g, '-').toLowerCase();
+    //     const gpsFile: Blob = this.state.gpsFile!; // Blobs allow us to pass binary data
 
-        const formData: FormData = new FormData();
-        formData.append('deviceId', String(this.state.deviceId!))
-        formData.append('timestamp', timestamp)
-        formData.append('imageBatchUploadId', imageBatchUploadId)
-        formData.append('imageFile', imageFile)
-        formData.append('gpsUploadId', gpsUploadId)
-        formData.append('gpsFile', gpsFile)
+    //     const formData: FormData = new FormData();
+    //     formData.append('deviceId', String(this.state.deviceId!))
+    //     formData.append('timestamp', timestamp)
+    //     formData.append('imageBatchUploadId', imageBatchUploadId)
+    //     formData.append('imageFile', imageFile)
+    //     formData.append('gpsUploadId', gpsUploadId)
+    //     formData.append('gpsFile', gpsFile)
 
-        await fetch('http://localhost:5000/create', {
-            method: 'POST',
-            mode: 'no-cors', // cannot pass headers with no-cors
-            body: formData,
-        }).then(response => {
-            console.log(response)
-        }).catch((reason) =>
-            console.log(reason)
-        )
+    //     await fetch('http://localhost:5000/create', {
+    //         method: 'POST',
+    //         mode: 'no-cors', // cannot pass headers with no-cors
+    //         body: formData,
+    //     }).then(response => {
+    //         console.log(response)
+    //     }).catch((reason) =>
+    //         console.log(reason)
+    //     )
 
-        return {
-            'imageBatchUploadId': imageBatchUploadId,
-            'gpsUploadId': gpsUploadId
-        }
-    }
+    //     return {
+    //         'imageBatchUploadId': imageBatchUploadId,
+    //         'gpsUploadId': gpsUploadId
+    //     }
+    // }
 
     runAnalysis = async () => {
-        const { imageBatchUploadId, gpsUploadId } = await this.uploadData();
-        const formData: FormData = new FormData();
-        formData.append('imageBatchUploadId', imageBatchUploadId)
-        formData.append('gpsUploadId', gpsUploadId)
-        await fetch('http://localhost:5000/analyzeImage', {
-            method: 'POST',
-            mode: 'no-cors', // cannot pass headers with no-cors
-            body: formData
-        }).then(response => {
-            console.log(response)
-        }).catch((reason) =>
-            console.log(reason)
-        )
+        const timestamp: string = this.state.uploadTime.toString();
+        const createParams: ICreateParams = {
+            timestamp: timestamp,
+            imageBatchUploadId: this.state.deviceId + "-images-" + timestamp.replace(/\s+/g, '-').toLowerCase(),
+            imageFile: this.state.imageFile!, // Blobs allow us to pass binary data
+            gpsUploadId: this.state.deviceId + "-gps-" + timestamp.replace(/\s+/g, '-').toLowerCase(),
+            gpsFile: this.state.gpsFile!, // Blobs allow us to pass binary data 
+            deviceId: String(this.state.deviceId!),
+        }
+
+        // const { imageBatchUploadId, gpsUploadId } = await this.uploadData();
+        const { imageBatchUploadId, gpsUploadId } = await create(createParams); // maybe await
+        
+        // const formData: FormData = new FormData();
+        // formData.append('imageBatchUploadId', imageBatchUploadId)
+        // formData.append('gpsUploadId', gpsUploadId)
+        // await fetch('http://localhost:5000/analyzeImage', {
+        //     method: 'POST',
+        //     mode: 'no-cors', // cannot pass headers with no-cors
+        //     body: formData
+        // }).then(response => {
+        //     console.log(response)
+        // }).catch((reason) =>
+        //     console.log(reason)
+        // )
+
+        const analyzeImageParams: IAnalyzeImageParams = {
+            imageBatchUploadId: imageBatchUploadId,
+            gpsUploadId: gpsUploadId
+        }
+        await analyzeImage(analyzeImageParams); //TODO maybe await
     }
 
     renderWindowContents() {

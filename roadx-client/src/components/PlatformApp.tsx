@@ -2,49 +2,43 @@ import React from 'react';
 import { Button, Navbar, NavbarGroup, Alignment } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 
-import Map from './Map';
 import FilterPanel from './FilterPanel';
 
 import "../styles/platformapp.css";
-import { thistle } from 'color-name';
+import ListView from './ListView';
+import { FilterSpec, RoadXRecord } from '../types/types';
+import { getDataByFilterSpec } from '../api/api';
 
-
-
-export type DataDisplayMode = string;
-export const MAP_MODE: DataDisplayMode = "MAP_MODE";
-export const LIST_MODE: DataDisplayMode = "LIST_MODE";
-
-export type DefectClassifiction = string;
-export const POTHOLE: DefectClassifiction = "Pothole";
-export const LONGITUDINAL_CRACK: DefectClassifiction = "Longitudinal Crack";
-export const LATERAL_CRACK: DefectClassifiction = "Lateral Crack";
-export const ALLIGATOR_CRACK: DefectClassifiction = "Alligator Crack";
-export const ALL_DEFECTS: Array<DefectClassifiction> = [POTHOLE, LONGITUDINAL_CRACK, LATERAL_CRACK, ALLIGATOR_CRACK]
-
-export interface FilterSpec {
-    coordinates: Array<String>;
-    defectClassifications: Array<DefectClassifiction>;
-    threshold: number;
-}
+type DataDisplayMode = string;
+const MAP_MODE: DataDisplayMode = "MAP_MODE";
+const LIST_MODE: DataDisplayMode = "LIST_MODE";
 
 interface IPlatformAppState {
     mode: DataDisplayMode,
     filters: FilterSpec,
+    data: Array<RoadXRecord>
 }
 
 export default class PlatformApp extends React.Component<{}, IPlatformAppState> {
     state: IPlatformAppState = {
         mode: LIST_MODE,
         filters: {
-            coordinates: [],
+            minLatitude: -100,
+            minLongitude: -100,
+            maxLatitude: 100,
+            maxLongitude: 100,
             defectClassifications: [],
             threshold: 0, 
-        }
+        },
+        data: [],
     }
 
-    updateFilters = (filters: FilterSpec) => {
+    updateFilters = async (filters: FilterSpec) => {
+        const result: Array<RoadXRecord> =  await getDataByFilterSpec(filters);
+        // perhaps some post processing here TODO
         this.setState({
             filters: filters,
+            data: result,
         })
     }
 
@@ -69,7 +63,10 @@ export default class PlatformApp extends React.Component<{}, IPlatformAppState> 
     renderFilterPanel = () => {
         return(
             <div className="app__filter_panel">
-                <FilterPanel filters={this.state.filters} updateFilters={this.updateFilters}/>
+                <FilterPanel 
+                    filters={this.state.filters} 
+                    updateFilters={this.updateFilters}
+                />
             </div>
         )
     }
@@ -77,7 +74,7 @@ export default class PlatformApp extends React.Component<{}, IPlatformAppState> 
     renderDataDisplay = () => {
         return(
             <div className="app__data_display"> 
-                YOOHOO 
+                <ListView data={this.state.data}/>
             </div>
         );
     }

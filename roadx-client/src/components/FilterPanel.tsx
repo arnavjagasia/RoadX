@@ -1,8 +1,9 @@
 import React from 'react';
-import { FilterSpec, ALL_DEFECTS, DefectClassifiction } from './PlatformApp';
-import { Slider, Checkbox, Alignment } from '@blueprintjs/core';
+import { FilterSpec, DefectClassification, ALL_DEFECTS} from '../types/types';
+import { Slider, Checkbox, Alignment, Button } from '@blueprintjs/core';
 
 import '../styles/filterpanel.css';
+import { IconNames } from '@blueprintjs/icons';
 
 interface IFilterPanelProps {
     filters: FilterSpec;
@@ -34,8 +35,7 @@ export default class FilterPanel extends React.Component<IFilterPanelProps, Filt
         )  
     }
 
-    updateCheckedDefect = (_: any, defectClass: DefectClassifiction) => {
-        console.log(defectClass)
+    updateCheckedDefect = (_: any, defectClass: DefectClassification) => {
         const { defectClassifications } = this.state;
         if (defectClassifications.includes(defectClass)) {
             this.setState({defectClassifications: defectClassifications.filter(d => d !== defectClass)});
@@ -56,7 +56,7 @@ export default class FilterPanel extends React.Component<IFilterPanelProps, Filt
                         return(
                             <Checkbox
                                 alignIndicator={Alignment.LEFT}
-                                // checked={defectClassifications.includes(defect)}
+                                checked={defectClassifications.includes(defect)}
                                 label={defect}
                                 key={defect}
                                 onChange={_ => this.updateCheckedDefect(_, defect)}
@@ -68,11 +68,24 @@ export default class FilterPanel extends React.Component<IFilterPanelProps, Filt
         )  
     }
 
+    renderUpdateFiltersButton = () => {
+        return(
+            <div className="filter_panel__item">
+                <Button 
+                    text="Update Filters" 
+                    icon={IconNames.FILTER}
+                    onClick={() => this.props.updateFilters(this.state)}
+                />
+            </div>
+        )
+    }
+
     render() {
         return(
             <div className="filter_panel__container">
                 {this.renderThresholdSlider()}
                 {this.renderDefectSelection()}
+                {this.renderUpdateFiltersButton()}
             </div>
         )
     }
