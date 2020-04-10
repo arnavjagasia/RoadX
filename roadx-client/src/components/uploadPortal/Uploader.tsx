@@ -3,7 +3,7 @@ import UploaderNav from './UploaderNav';
 import FileUploader from './FileUploader';
 import DeviceRegisterer from './DeviceRegisterer';
 
-import '../styles/uploader.css';
+import '../../styles/uploader.css';
 import { Button } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 
