@@ -4,6 +4,9 @@
 To run the server locally: `env FLASK_APP=server.py flask run`
 This will run on localhost:5000 by default
 
+To connect to the database: 
+* Use this connection string with Mongo Compass: mongodb+srv://roadxadmin:[password]@cluster0-mdzoy.mongodb.net/test
+
 ## API
 ### `/create` - POST
 Saves a zip file of images and associated metadata into MongoDB

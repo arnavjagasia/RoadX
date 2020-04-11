@@ -46,7 +46,6 @@ export default class FileUploader extends React.Component<IFileUploaderProps, IF
   }
 
   renderFileInfo = () => {
-    console.log(this.state)
     if (this.state.registeredFile) {
       return(
         <Card className='file_uploader__file_card'>
@@ -62,7 +61,6 @@ export default class FileUploader extends React.Component<IFileUploaderProps, IF
   }
 
   preRegisterFile = (file: File) => {
-    console.log(file.type)
     // Ensure the file is the correct type
     if (!this.props.permittedFileExtensions.includes(file.type)) {
       const toastProps = {

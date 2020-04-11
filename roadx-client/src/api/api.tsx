@@ -4,12 +4,6 @@ import { FilterSpec } from "../types/types";
 import { Toaster, Position, Intent, Icon } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 
-// Toaster for generic alerts
-export const AppToaster = Toaster.create({
-    className: "platform-toaster",
-    position: Position.TOP,
-});
-
 // /create
 export interface ICreateParams {
     timestamp: string, 
@@ -51,30 +45,20 @@ export interface IAnalyzeImageParams {
     gpsUploadId: string,
 }
 
-export async function analyzeImage(params: IAnalyzeImageParams) {
+export async function analyzeImage(params: IAnalyzeImageParams): Promise<{[key: string]: string}> {
     const formData: FormData = new FormData();
     formData.append('imageBatchUploadId', params.imageBatchUploadId)
     formData.append('gpsUploadId', params.imageBatchUploadId)
-    await fetch('http://localhost:5000/analyzeImage', {
+    let res: {[key: string]: string} = await fetch('http://localhost:5000/analyzeImage', {
         method: 'POST',
         mode: 'no-cors', // cannot pass headers with no-cors
         body: formData
     }).then(response => {
-        console.log(response)
-        AppToaster.show({ 
-            message: "Analysis Complete", 
-            intent: Intent.SUCCESS,
-            icon: IconNames.TICK
-        });
-    }).catch((reason) => {
-        console.log(reason)
-        AppToaster.show({ 
-            message: "Analysis Failed. " + reason, 
-            intent: Intent.WARNING,
-            icon: IconNames.CROSS
-        });
+        return {"status": String(response.status), "message": "OK"};
+    }).catch(reason => {
+        return {"status": "500", "message": reason};
     })
-    
+    return res;  
 }
 
 export async function getDataByFilterSpec(f: FilterSpec) {
