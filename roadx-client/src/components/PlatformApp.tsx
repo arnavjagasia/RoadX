@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Navbar, NavbarGroup, Alignment } from '@blueprintjs/core';
+import { Button, Navbar, NavbarGroup, Alignment, Overlay, Classes, Dialog } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 
 import FilterPanel from './FilterPanel';
@@ -8,11 +8,13 @@ import "../styles/platformapp.css";
 import ListView from './ListView';
 import { FilterSpec, RoadXRecord, DataDisplayMode, LIST_MODE, MAP_MODE } from '../types/types';
 import { getDataByFilterSpec } from '../api/api';
+import Uploader from './uploadPortal/Uploader';
 
 interface IPlatformAppState {
     mode: DataDisplayMode,
     filters: FilterSpec,
     data: Array<RoadXRecord>
+    uploaderIsOpen: boolean,
 }
 
 export default class PlatformApp extends React.Component<{}, IPlatformAppState> {
@@ -27,6 +29,7 @@ export default class PlatformApp extends React.Component<{}, IPlatformAppState> 
             threshold: 0, 
         },
         data: [],
+        uploaderIsOpen: false,
     }
 
     updateFilters = async (filters: FilterSpec) => {
@@ -46,6 +49,14 @@ export default class PlatformApp extends React.Component<{}, IPlatformAppState> 
         })
     } 
 
+    openUploader = () => {
+        this.setState({uploaderIsOpen: true});
+    }
+
+    closeUploader = () => {
+        this.setState({uploaderIsOpen: false});
+    }
+
     // Helper method to render the navbar at the top of the app
     renderNavbar = () => {
         return (
@@ -58,7 +69,17 @@ export default class PlatformApp extends React.Component<{}, IPlatformAppState> 
                         minimal={false}
                         text="Upload New Data" 
                         icon={IconNames.UPLOAD}
+                        onClick={this.openUploader}
                     />
+                    <Dialog
+                        icon={IconNames.UPLOAD}
+                        title="RoadX Data Upload Portal"
+                        isOpen={this.state.uploaderIsOpen}
+                        onClose={this.closeUploader} 
+                        usePortal={true}
+                    >
+                        <Uploader/>
+                    </Dialog>
                 </NavbarGroup>
             </Navbar>
         )

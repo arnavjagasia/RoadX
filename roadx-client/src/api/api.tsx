@@ -1,6 +1,14 @@
 // File for API Calls
 
 import { FilterSpec } from "../types/types";
+import { Toaster, Position, Intent, Icon } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
+
+// Toaster for generic alerts
+export const AppToaster = Toaster.create({
+    className: "platform-toaster",
+    position: Position.TOP,
+});
 
 // /create
 export interface ICreateParams {
@@ -53,9 +61,20 @@ export async function analyzeImage(params: IAnalyzeImageParams) {
         body: formData
     }).then(response => {
         console.log(response)
-    }).catch((reason) =>
+        AppToaster.show({ 
+            message: "Analysis Complete", 
+            intent: Intent.SUCCESS,
+            icon: IconNames.TICK
+        });
+    }).catch((reason) => {
         console.log(reason)
-    )
+        AppToaster.show({ 
+            message: "Analysis Failed. " + reason, 
+            intent: Intent.WARNING,
+            icon: IconNames.CROSS
+        });
+    })
+    
 }
 
 export async function getDataByFilterSpec(f: FilterSpec) {

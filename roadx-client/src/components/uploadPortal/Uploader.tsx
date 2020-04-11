@@ -174,14 +174,14 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
     render() {
         return (
             <div className="uploader__container">
-                <div className="uploader__nav">
+                {/* <div className="uploader__nav">
                     <UploaderNav
                         states={uploaderStates}
                         currentState={this.state.uploaderState}
                         handleUploadStateChange={this.handleUploaderStateChange}
                         deviceId={this.state.deviceId}
                     />
-                </div>
+                </div> */}
                 <div className="uploader__window">
                     {this.renderWindowContents()}
                 </div>

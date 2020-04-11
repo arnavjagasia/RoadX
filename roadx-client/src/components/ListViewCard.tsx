@@ -63,7 +63,7 @@ export default class ListViewCard extends React.Component<IListViewCardProps, IL
 
                         <h3><strong> Automated Classification Details </strong></h3>
                         {record.defectClassifications.map(defect => {
-                            return(<p>{defect.classification}: {defect.threshold * 100 }%</p>)
+                            return(<p key={defect.classification}>{defect.classification}: {defect.threshold * 100 }%</p>)
                         })}
                         
                         <h3><strong> Image </strong></h3>
