@@ -62,6 +62,10 @@ def create():
         # Skip any files in directory used for caching (ex: _MACOSX)
         if (imageName.startswith("_")):
             continue
+
+        if (not imageName.endswith(".png")):
+            continue
+
         print("/create: Saving image:", imageName)
         image_bytes = io.BytesIO(imageZipFile.read(imageName))
 
@@ -77,8 +81,11 @@ def create():
         }
 
         # Add GPS Data
-        if imageName in timestamp_to_coords.keys():
-            (longitude, latitude) = timestamp_to_coords['imageName']
+        timestamps = [timestamp.strip() for timestamp in timestamp_to_coords.keys()]
+        timestamp = imageName[0:-4]
+        if timestamp in timestamps:
+            print("Adding extra data")
+            (longitude, latitude) = timestamp_to_coords[timestamp]
             database_data['timestamp'] = imageName
             database_data['longitude'] = longitude
             database_data['latitude'] = latitude
@@ -150,8 +157,46 @@ def analyzeImage():
         response = {'ok': False, 'message': 'Internal Error in classification model'}
         return (jsonify(response), 500)
 
+@app.route('/getAllInRange', methods=['POST'])
+def getAllInRange():
+     # Validate Request
+    data = request.form
+    minLongitude = data.get('minLongitude', None)
+    maxLongitude = data.get('maxLongitude', None)
+    minLatitude = data.get('minLatitude', None)
+    maxLatitude = data.get('maxLatitude', None)
 
+    # Request parameters validation
+    validators = []
+    validators.append(bool(minLongitude is not None))
+    validators.append(bool(maxLongitude is not None))
+    validators.append(bool(minLatitude is not None))
+    validators.append(bool(maxLatitude is not None))
 
+    if not all(val == True for val in validators):
+        return(jsonify({'ok': False, 'message': 'Bad request'}), 400)
+    print("/getAllInRange: Request validation successful")
+
+    cursor =  mongo.db.images.find({'$and': [
+        {'longitude': {'$gt': minLongitude}},
+        {'longitude': {'$lt': maxLongitude}},
+        {'latitude': {'$gt': minLatitude}},
+        {'latitude': {'$lt': maxLatitude}},
+    ]})
+
+    results = {}
+    for document in cursor:
+        imageFileName = document['imagemageFileName']
+        longitude = document['longitude']
+        latitude = document['latitude']
+        results[imageFileName] = (longitude, latitude)
+
+    response = Flask.response_class(
+        response=jsonify(results),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
 
 # # Test that the image got stored
 # @app.route('/testRetrieve', methods=['GET'])

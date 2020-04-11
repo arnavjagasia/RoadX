@@ -1,0 +1,35 @@
+
+.app__container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 100vh;
+    /* justify-content: flex-start; */
+    background-color: #E1E8ED;
+    width: 100%;
+}
+
+.app__contents {
+    display: flex;
+    flex-direction: row;
+    background-color: #E1E8ED;
+    flex: 1;
+}
+
+.app__navbar-text {
+    font-size: 1.5em;
+}
+
+.app__filter_panel {
+    display: flex;
+    flex: 1;
+    background-color:  #F5F8FA;
+    min-width: 200px;
+}
+
+.app__data_display {
+    display: flex;
+    flex: 5;
+    background-color: #293742;
+    width: 100%;
+}

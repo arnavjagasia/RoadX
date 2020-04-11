@@ -1,0 +1,33 @@
+.list_view__container {
+    display: flex;
+    flex: 1;
+    flex-flow: column;
+    width: 100%;
+}
+
+.list_view_card__container {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    margin: 1em;
+}
+
+.list_view_card__info_button {
+    display: flex;
+    padding-left: 0;
+    padding-right: 0;
+    flex-flow: row;
+}
+
+.list_view_card__text {
+    display: flex;
+    padding-left: 0;
+    padding-right: 0;
+    flex-flow: column;
+    justify-content: center;
+    text-size: 1em;
+}
+
+.list_view_card__dialog-text {
+    margin: 1em;
+}

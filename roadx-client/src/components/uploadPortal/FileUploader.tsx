@@ -3,7 +3,7 @@ import { Button, Card, Icon, Toaster, Intent } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { useDropzone } from 'react-dropzone';
 
-import '../styles/fileuploader.css';
+import '../../styles/fileuploader.css';
 
 
 interface IUploadFileProps {
