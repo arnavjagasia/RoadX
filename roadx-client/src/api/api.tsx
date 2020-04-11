@@ -1,6 +1,6 @@
 // File for API Calls
 
-import { FilterSpec, RoadXRecord } from "../types/types";
+import { FilterSpec } from "../types/types";
 
 // /create
 export interface ICreateParams {

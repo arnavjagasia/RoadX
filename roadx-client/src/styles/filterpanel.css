@@ -12,8 +12,15 @@
     margin: 2em;
 }
 
+.filter_panel__button {
+    display: flex;
+    flex-flow: column;
+    margin: 1em;
+}
+
 .filter_panel__item-text {
-    font-size: 1em;
+    font-size: 1.1em;
     display: flex;
     font-weight: bold;
+    text-transform: capitalize;
 }

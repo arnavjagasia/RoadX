@@ -6,12 +6,8 @@ import FilterPanel from './FilterPanel';
 
 import "../styles/platformapp.css";
 import ListView from './ListView';
-import { FilterSpec, RoadXRecord } from '../types/types';
+import { FilterSpec, RoadXRecord, DataDisplayMode, LIST_MODE, MAP_MODE } from '../types/types';
 import { getDataByFilterSpec } from '../api/api';
-
-type DataDisplayMode = string;
-const MAP_MODE: DataDisplayMode = "MAP_MODE";
-const LIST_MODE: DataDisplayMode = "LIST_MODE";
 
 interface IPlatformAppState {
     mode: DataDisplayMode,
@@ -42,12 +38,20 @@ export default class PlatformApp extends React.Component<{}, IPlatformAppState> 
         })
     }
 
+    changeMode = () => {
+        const { mode } = this.state;
+        // Toggle the mode
+        this.setState({
+            mode: mode === LIST_MODE ? MAP_MODE : LIST_MODE,
+        })
+    } 
+
     // Helper method to render the navbar at the top of the app
     renderNavbar = () => {
         return (
             <Navbar>
                 <NavbarGroup align={Alignment.LEFT}>
-                    <Navbar.Heading className="app__navbar-text">RoadX</Navbar.Heading>
+                    <Navbar.Heading className="app__navbar-text">RoadX Analysis Platform</Navbar.Heading>
                 </NavbarGroup>
                 <NavbarGroup align={Alignment.RIGHT}>
                     <Button 
@@ -61,11 +65,14 @@ export default class PlatformApp extends React.Component<{}, IPlatformAppState> 
     }
 
     renderFilterPanel = () => {
+        const { filters, mode } = this.state;
         return(
             <div className="app__filter_panel">
                 <FilterPanel 
-                    filters={this.state.filters} 
+                    filters={filters} 
                     updateFilters={this.updateFilters}
+                    mode={mode}
+                    changeMode={this.changeMode}
                 />
             </div>
         )
