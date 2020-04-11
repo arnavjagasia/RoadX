@@ -2,29 +2,9 @@ import React, { useState, useEffect } from "react";
 import InteractiveMap, { Marker, Popup } from "react-map-gl";
 import MapGL, {NavigationControl, FullscreenControl, ScaleControl} from 'react-map-gl';
 import ControlPanel from './Control-Panel';
+import '../styles/map.css';
 import * as potholeData from "./data/pothole.json";
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
-
-const fullscreenControlStyle = {
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  padding: '10px'
-};
-
-const navStyle = {
-  position: 'absolute',
-  top: 36,
-  left: 0,
-  padding: '10px'
-};
-
-const scaleControlStyle = {
-  position: 'absolute',
-  bottom: 36,
-  left: 0,
-  padding: '10px'
-};
 
 interface MapState {
   viewport: {
@@ -36,8 +16,6 @@ interface MapState {
   },
   popupInfo: any
 }
-
-
 
 export default class App extends React.Component<{}, MapState> {
   // const [viewport, setViewport] = useState({
@@ -78,17 +56,6 @@ export default class App extends React.Component<{}, MapState> {
  //   </Popup>
  // )}:
 
- // <div style={fullscreenControlStyle}>
- //   <FullscreenControl />
- // </div>
- // <div style={navStyle}>
- //   <NavigationControl />
- // </div>
- // <div style={scaleControlStyle}>
- //   <ScaleControl />
- // </div>
- // <ControlPanel containerComponent={this.props.containerComponent} />
-
  _renderPopup() {
     const {popupInfo} = this.state;
 
@@ -102,7 +69,6 @@ export default class App extends React.Component<{}, MapState> {
           closeOnClick={false}
           onClose={() => this.setState({popupInfo: null})}
         >
-
         </Popup>
       )
     );
@@ -122,6 +88,18 @@ export default class App extends React.Component<{}, MapState> {
           this.setState({viewport });
         }}
       >
+
+      {this._renderPopup()}
+
+      <div className= "map__full-screen-control">
+        <FullscreenControl />
+      </div>
+      <div className= "map__nav">
+        <NavigationControl />
+      </div>
+      <div className= "map__scale-control">
+        <ScaleControl />
+      </div>
 
       {potholeData.features.map(pothole => (
           <Marker
