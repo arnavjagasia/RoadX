@@ -2,7 +2,7 @@ import React from 'react';
 import { Select, ItemRenderer } from '@blueprintjs/select';
 import { MenuItem, Button } from '@blueprintjs/core';
 
-import '../styles/registerer.css';
+import '../../styles/registerer.css';
 
 interface IDeviceRegistererProps {
     registerDeviceId: (id: Number) => void;

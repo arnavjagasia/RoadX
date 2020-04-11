@@ -3,7 +3,7 @@ import { Card, Icon } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 
 
-import "../styles/uploader.css";
+import "../../styles/uploader.css";
 import { UploaderState } from './Uploader';
 
 interface IUploaderNavProps {
