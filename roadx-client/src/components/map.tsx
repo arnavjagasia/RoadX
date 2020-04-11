@@ -37,25 +37,6 @@ export default class App extends React.Component<{}, MapState> {
     popupInfo: null
   }
 
- //const [selectedPothole, setSelectedPothole] = useState(null);
-
- //
- // {selectedPothole ? (
- //     <Popup
- //       latitude={selectedPothole.geometry.coordinates[0]}
- //       longitude={selectedPothole.geometry.coordinates[1]}
- //       // onClose={() => {
- //       //   setSelectedPothole(null);
- //       // }}
- //     >
- //     <div>
- //       <h2>{selectedPothole.properties.POTHOLETYPE}</h2>
- //       //<p>{selectedPothole.properties.SCORES}</p>
- //       //<p>{selectedPothole.properties.TIMESTAMP}</p>
- //     </div>
- //   </Popup>
- // )}:
-
  _renderPopup() {
     const {popupInfo} = this.state;
 
