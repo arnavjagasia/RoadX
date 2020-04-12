@@ -1,22 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import InteractiveMap, { Marker, Popup } from "react-map-gl";
-import MapGL, {NavigationControl, FullscreenControl, ScaleControl} from 'react-map-gl';
-import ControlPanel from './Control-Panel';
+import { NavigationControl, FullscreenControl, ScaleControl } from 'react-map-gl';
 import '../styles/map.css';
-import * as potholeData from "./data/pothole.json";
 import { RoadXRecord, POTHOLE, LATERAL_CRACK, ALLIGATOR_CRACK } from '../types/types';
 const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
 
 interface IMapProps {
-    data: Array<RoadXRecord>
+  data: Array<RoadXRecord>
 }
 
-interface MapState {
+interface IMapState {
   viewport: {
     latitude: number;
     longitude: number;
-    // width: number;
-    // height: number;
     zoom: number;
   },
   popupInfo: any
@@ -59,21 +55,11 @@ export const testData: Array<RoadXRecord> = [{
 }
 ]
 
-export default class Map extends React.Component<IMapProps, MapState> {
-  // const [viewport, setViewport] = useState({
-  //   latitude: 39.953346252441406,
-  //   longitude: -75.1633529663086,
-  //   width: "100vw",
-  //   height: "100vh",
-  //   zoom: 10
-  // })
-
-  state : MapState = {
+export default class Map extends React.Component<IMapProps, IMapState> {
+  state: IMapState = {
     viewport: {
       latitude: 39.953346252441406,
       longitude: -75.1633529663086,
-      // width: "100%",
-      // height: "100%"",
       zoom: 10
     },
     popupInfo: null
@@ -97,45 +83,43 @@ export default class Map extends React.Component<IMapProps, MapState> {
     );
   }
 
-  public render() {
-  return (
-      <InteractiveMap
-        mapboxApiAccessToken={MAPBOX_TOKEN}
-        width={"100%"}
-        height={1000}
-        latitude={this.state.viewport.latitude}
-        longitude={this.state.viewport.longitude}
-        zoom={this.state.viewport.zoom}
-        mapStyle='mapbox://styles/mapbox/streets-v11'
-        onViewportChange={(viewport) => {
-          this.setState({viewport });
-        }}
-      >
+  render() {
+    return (
+        <InteractiveMap
+          mapboxApiAccessToken={MAPBOX_TOKEN}
+          width={"100%"}
+          height={1000}
+          latitude={this.state.viewport.latitude}
+          longitude={this.state.viewport.longitude}
+          zoom={this.state.viewport.zoom}
+          mapStyle='mapbox://styles/mapbox/streets-v11'
+          onViewportChange={(viewport) => {
+            this.setState({viewport });
+          }}
+        >
+          <div className= "map__full-screen-control">
+            <FullscreenControl />
+          </div>
+          <div className= "map__nav">
+            <NavigationControl />
+          </div>
+          <div className= "map__scale-control">
+            <ScaleControl />
+          </div>
 
-      {this._renderPopup()}
+          {testData.map(record => (
+              <Marker
+                key={record.recordId}
+                latitude={record.latitude}
+                longitude={record.longitude}
+              >
+                <button className="marker-btn">
+                  <img src="/gps.svg" />
+                </button>
+              </Marker>
+            ))}
 
-      <div className= "map__full-screen-control">
-        <FullscreenControl />
-      </div>
-      <div className= "map__nav">
-        <NavigationControl />
-      </div>
-      <div className= "map__scale-control">
-        <ScaleControl />
-      </div>
-
-      {testData.map(record => (
-          <Marker
-            key={record.recordId}
-            latitude={record.latitude}
-            longitude={record.longitude}
-          >
-            <button className="marker-btn">
-              <img src="/gps.svg" />
-            </button>
-          </Marker>
-        ))}
-
-      </InteractiveMap>
-  );}
+        </InteractiveMap>
+    );
+  }
 }
