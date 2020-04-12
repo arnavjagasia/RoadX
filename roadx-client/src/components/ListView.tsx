@@ -6,10 +6,10 @@ interface IListViewProps {
     data: Array<RoadXRecord>
 }
 
-const testData: Array<RoadXRecord> = [{
+export const testData: Array<RoadXRecord> = [{
     latitude: -75,
     longitude: 100,
-    defectClassifications: [ 
+    defectClassifications: [
         {classification: POTHOLE, threshold: 1}
     ],
     detectionTime: "0012041024",
@@ -20,7 +20,7 @@ const testData: Array<RoadXRecord> = [{
 {
     latitude: -74.0234,
     longitude: 102,
-    defectClassifications: [ 
+    defectClassifications: [
         {classification: LATERAL_CRACK, threshold: 0.45},
         {classification: ALLIGATOR_CRACK, threshold: 0.36}
     ],
@@ -32,7 +32,7 @@ const testData: Array<RoadXRecord> = [{
 {
     latitude: -74.12,
     longitude: 101,
-    defectClassifications: [ 
+    defectClassifications: [
         {classification: POTHOLE, threshold: 0.45},
         {classification: POTHOLE, threshold: 0.36}
     ],
@@ -49,8 +49,8 @@ export default class ListView extends React.Component<IListViewProps, {}> {
             <div className="list_view__container">
                 {testData.map((record: RoadXRecord) => {
                     return(
-                        <ListViewCard 
-                            key={record.recordId} 
+                        <ListViewCard
+                            key={record.recordId}
                             record={record}
                         />
                     )

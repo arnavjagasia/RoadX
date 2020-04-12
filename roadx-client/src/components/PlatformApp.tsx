@@ -6,6 +6,7 @@ import FilterPanel from './FilterPanel';
 
 import "../styles/platformapp.css";
 import ListView from './ListView';
+import Map from './Map';
 import { FilterSpec, RoadXRecord, DataDisplayMode, LIST_MODE, MAP_MODE } from '../types/types';
 import { getDataByFilterSpec } from '../api/api';
 import Uploader from './uploadPortal/Uploader';
@@ -26,15 +27,16 @@ export default class PlatformApp extends React.Component<{}, IPlatformAppState> 
             maxLatitude: 100,
             maxLongitude: 100,
             defectClassifications: [],
-            threshold: 0, 
+            threshold: 0,
         },
         data: [],
         uploaderIsOpen: false,
     }
 
     updateFilters = async (filters: FilterSpec) => {
-        const result: Array<RoadXRecord> =  await getDataByFilterSpec(filters);
+        // const result: Array<RoadXRecord> =  await getDataByFilterSpec(filters);
         // perhaps some post processing here TODO
+        const result: Array<RoadXRecord>= []
         this.setState({
             filters: filters,
             data: result,
@@ -43,11 +45,12 @@ export default class PlatformApp extends React.Component<{}, IPlatformAppState> 
 
     changeMode = () => {
         const { mode } = this.state;
+        console.log('hello')
         // Toggle the mode
         this.setState({
             mode: mode === LIST_MODE ? MAP_MODE : LIST_MODE,
         })
-    } 
+    }
 
     openUploader = () => {
         this.setState({uploaderIsOpen: true});
@@ -65,9 +68,9 @@ export default class PlatformApp extends React.Component<{}, IPlatformAppState> 
                     <Navbar.Heading className="app__navbar-text">RoadX Analysis Platform</Navbar.Heading>
                 </NavbarGroup>
                 <NavbarGroup align={Alignment.RIGHT}>
-                    <Button 
+                    <Button
                         minimal={false}
-                        text="Upload New Data" 
+                        text="Upload New Data"
                         icon={IconNames.UPLOAD}
                         onClick={this.openUploader}
                     />
@@ -75,7 +78,7 @@ export default class PlatformApp extends React.Component<{}, IPlatformAppState> 
                         icon={IconNames.UPLOAD}
                         title="RoadX Data Upload Portal"
                         isOpen={this.state.uploaderIsOpen}
-                        onClose={this.closeUploader} 
+                        onClose={this.closeUploader}
                         usePortal={true}
                     >
                         <Uploader/>
@@ -89,8 +92,8 @@ export default class PlatformApp extends React.Component<{}, IPlatformAppState> 
         const { filters, mode } = this.state;
         return(
             <div className="app__filter_panel">
-                <FilterPanel 
-                    filters={filters} 
+                <FilterPanel
+                    filters={filters}
                     updateFilters={this.updateFilters}
                     mode={mode}
                     changeMode={this.changeMode}
@@ -100,11 +103,20 @@ export default class PlatformApp extends React.Component<{}, IPlatformAppState> 
     }
 
     renderDataDisplay = () => {
+      if(this.state.mode === MAP_MODE){
         return(
-            <div className="app__data_display"> 
+            <div className="app__data_display">
+                <Map data={this.state.data}/>
+            </div>
+        );
+      }
+      else{
+        return(
+            <div className="app__data_display">
                 <ListView data={this.state.data}/>
             </div>
         );
+      }
     }
 
     render() {
@@ -115,7 +127,7 @@ export default class PlatformApp extends React.Component<{}, IPlatformAppState> 
                     {this.renderFilterPanel()}
                     {this.renderDataDisplay()}
                </div>
-           </div> 
+           </div>
         )
     }
     // Nav bar at top
