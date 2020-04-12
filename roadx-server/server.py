@@ -61,7 +61,7 @@ def create():
         # Skip any files in directory used for caching (ex: _MACOSX)
         if (imageName.startswith("_")):
             continue
-            
+
         if (not imageName.endswith(".png")):
             continue
 
@@ -88,7 +88,7 @@ def create():
             database_data['timestamp'] = imageName
             database_data['longitude'] = longitude
             database_data['latitude'] = latitude
-            
+
         mongo.db.images.insert_one(database_data)
         counter = counter + 1
 
@@ -112,7 +112,7 @@ def analyzeImage():
     if not hasBatchId:
         return(jsonify({'ok': False, 'message': 'Bad request'}), 400)
     print("/analyze: Request Validation successful")
-    
+
 
     # Get all images for filename
     images = mongo.db.images.find({'imageBatchUploadId': imageBatchUploadId })
@@ -136,13 +136,13 @@ def analyzeImage():
         # Update mongo document about this image with classification results
         classified_filename = filename + "-classified"
         mongo.db.images.update_one(
-            {'imageFileName': filename}, 
+            {'imageFileName': filename},
             {'$set':{
                 'classifiedImageFileName': classified_filename,
                 'scores': scores
             }}
         )
-        
+
         # Save the new image
         output = io.BytesIO()
         classifiedImage.save(output, format=original_format)
@@ -181,21 +181,21 @@ def getAllInRange():
         {'latitude': {'$gt': minLatitude}},
         {'latitude': {'$lt': maxLatitude}},
     ]})
-    
+
     results = {}
     for document in cursor:
         imageFileName = document['imagemageFileName']
         longitude = document['longitude']
         latitude = document['latitude']
         results[imageFileName] = (longitude, latitude)
-    
+
     response = Flask.response_class(
         response=jsonify(results),
         status=200,
         mimetype='application/json'
     )
     return response
-    
+
 # # Test that the image got stored
 # @app.route('/testRetrieve', methods=['GET'])
 # def testRetrieve():

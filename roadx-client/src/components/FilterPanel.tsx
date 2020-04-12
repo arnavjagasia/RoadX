@@ -9,7 +9,7 @@ interface IFilterPanelProps {
     filters: FilterSpec;
     updateFilters: (filters: FilterSpec) => void;
     mode: DataDisplayMode;
-    changeMode: (mode: DataDisplayMode) => void;
+    changeMode:() => void;
 }
 
 export default class FilterPanel extends React.Component<IFilterPanelProps, FilterSpec> {
@@ -24,7 +24,7 @@ export default class FilterPanel extends React.Component<IFilterPanelProps, Filt
         return(
             <div className="filter_panel__item">
                 <p className="filter_panel__item-text"> Filter by Confidence Threshold </p>
-                <Slider 
+                <Slider
                     initialValue={100}
                     labelStepSize={20}
                     max={100}
@@ -34,7 +34,7 @@ export default class FilterPanel extends React.Component<IFilterPanelProps, Filt
                     value={threshold}
                 />
             </div>
-        )  
+        )
     }
 
     updateCheckedDefect = (_: any, defectClass: DefectClassification) => {
@@ -44,7 +44,7 @@ export default class FilterPanel extends React.Component<IFilterPanelProps, Filt
         } else {
             this.setState({defectClassifications: [defectClass, ...defectClassifications]})
         }
-        
+
     }
 
     renderDefectSelection = () => {
@@ -67,14 +67,14 @@ export default class FilterPanel extends React.Component<IFilterPanelProps, Filt
                     })
                 }
             </div>
-        )  
+        )
     }
 
     renderUpdateFiltersButton = () => {
         return(
             <div className="filter_panel__button">
-                <Button 
-                    text="Update Filters" 
+                <Button
+                    text="Update Filters"
                     icon={IconNames.FILTER}
                     onClick={() => this.props.updateFilters(this.state)}
                 />
@@ -88,10 +88,10 @@ export default class FilterPanel extends React.Component<IFilterPanelProps, Filt
         const icon = mode === LIST_MODE ? IconNames.MAP : IconNames.LIST;
         return (
             <div className="filter_panel__button">
-                <Button 
+                <Button
                     text={text}
                     icon={icon}
-                    onClick={() => this.props.updateFilters(this.state)}
+                    onClick={() => this.props.changeMode()}
                 />
             </div>
         )

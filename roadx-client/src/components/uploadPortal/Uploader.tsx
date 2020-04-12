@@ -93,11 +93,11 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
             imageBatchUploadId: this.state.deviceId + "-images-" + timestamp.replace(/\s+/g, '-').toLowerCase(),
             imageFile: this.state.imageFile!, // Blobs allow us to pass binary data
             gpsUploadId: this.state.deviceId + "-gps-" + timestamp.replace(/\s+/g, '-').toLowerCase(),
-            gpsFile: this.state.gpsFile!, // Blobs allow us to pass binary data 
+            gpsFile: this.state.gpsFile!, // Blobs allow us to pass binary data
             deviceId: String(this.state.deviceId!),
         }
 
-        const { imageBatchUploadId, gpsUploadId } = await create(createParams); 
+        const { imageBatchUploadId, gpsUploadId } = await create(createParams); // maybe await
         
         const analyzeImageParams: IAnalyzeImageParams = {
             imageBatchUploadId: imageBatchUploadId,
