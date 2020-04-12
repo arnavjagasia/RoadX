@@ -5,6 +5,7 @@ import { IconNames } from '@blueprintjs/icons';
 
 import '../styles/listview.css';
 import { ELEVATION_2 } from '@blueprintjs/core/lib/esm/common/classes';
+import DetailView from './DetailView';
 
 interface IListViewCardProps {
     record: RoadXRecord;
@@ -36,9 +37,6 @@ export default class ListViewCard extends React.Component<IListViewCardProps, IL
         const maxClassification: string = record.defectClassifications[0].classification;
         const latitude: string = String(record.latitude);
         const longitude: string = String(record.longitude);
-
-        const urlCreator = window.URL || window.webkitURL;
-        const imageUrl = urlCreator.createObjectURL(record.image);
         // document.querySelector("#image").src = imageUrl;
 
         return(
@@ -55,21 +53,10 @@ export default class ListViewCard extends React.Component<IListViewCardProps, IL
                     title="RoadX Automated Discovery Result" 
                     onClose={this.handleClose}
                 >
-                    <div className="list_view_card__dialog-text">
-                        <h3><strong> Defect Details </strong></h3>
-                        <p>Location: ({latitude}ºE, {longitude}ºN)</p>
-                        <p>Discovery Time: {record.detectionTime}</p>
-                        <p>Upload Time: {record.uploadTime}</p>
-
-                        <h3><strong> Automated Classification Details </strong></h3>
-                        {record.defectClassifications.map(defect => {
-                            return(<p key={defect.classification}>{defect.classification}: {defect.threshold * 100 }%</p>)
-                        })}
-                        
-                        <h3><strong> Image </strong></h3>
-                        <img src={imageUrl} alt={"Road Defect"}/>
-                    </div>
+                    <DetailView record={record} />
                 </Dialog>
+                
+                
             </Card>
         )
     }
