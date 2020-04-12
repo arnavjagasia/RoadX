@@ -12,7 +12,7 @@ export default class DetailView extends React.Component<IDetailViewProps, {}> {
         const imageUrl = urlCreator.createObjectURL(record.image);
 
         return(
-            <div className="list_view_card__dialog-text">
+            <div key={record.recordId} className="list_view_card__dialog-text">
                 <h3><strong> Defect Details </strong></h3>
                 <p>Location: ({record.latitude}ºE, {record.longitude}ºN)</p>
                 <p>Discovery Time: {record.detectionTime}</p>

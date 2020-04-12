@@ -1,11 +1,15 @@
 import React from "react";
 import InteractiveMap, { Marker, Popup } from "react-map-gl";
 import { NavigationControl, FullscreenControl, ScaleControl } from 'react-map-gl';
-import '../styles/map.css';
-import { RoadXRecord, POTHOLE, LATERAL_CRACK, ALLIGATOR_CRACK } from '../types/types';
+
+import { RoadXRecord, POTHOLE, LATERAL_CRACK, ALLIGATOR_CRACK, LONGITUDINAL_CRACK } from '../types/types';
 import DetailView from "./DetailView";
-import { Overlay } from "@blueprintjs/core";
-const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
+
+import '../styles/map.css';
+
+// const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
+const MAPBOX_TOKEN ="pk.eyJ1IjoiYWRlbGVsaSIsImEiOiJjazhjMHdvMDUwZWttM2Z0N3lhbDc5cXdzIn0.44vjuMJE2Icp-hV1P1d3TQ";
+
 
 interface IMapProps {
 	data: Array<RoadXRecord>
@@ -17,7 +21,7 @@ interface IMapState {
 		longitude: number;
 		zoom: number;
 	},
-	currentPopUp: RoadXRecord | undefined,
+	currentPopUpRecord: RoadXRecord | undefined,
 }
 
 export const testData: Array<RoadXRecord> = [{
@@ -44,11 +48,11 @@ export const testData: Array<RoadXRecord> = [{
 		recordId: "testrecord2"
 },
 {
-		latitude: -74.12,
-		longitude: 101,
+		latitude: 39.97,
+		longitude: -75.18,
 		defectClassifications: [
 				{classification: POTHOLE, threshold: 0.45},
-				{classification: POTHOLE, threshold: 0.36}
+				{classification: LONGITUDINAL_CRACK, threshold: 0.36}
 		],
 		detectionTime: "testTIme",
 		uploadTime: "testTime",
@@ -64,30 +68,32 @@ export default class Map extends React.Component<IMapProps, IMapState> {
 			longitude: -75.1633529663086,
 			zoom: 10
 		},
-		currentPopUp: null
+		currentPopUpRecord: null
     }
     
     setPopUp = (record: RoadXRecord) => {
-        this.setState({currentPopUp: record})
+        this.setState({currentPopUpRecord: record})
     }
 
     closePopUp = () => {
-        this.setState({currentPopUp: undefined});
+        this.setState({currentPopUpRecord: undefined});
     }
 
     showPopUp() {
-        const { currentPopUp } = this.state;
+        const { currentPopUpRecord } = this.state;
+        // Make sure the current record is not undefined 
 		return (
-			currentPopUp && (
+			currentPopUpRecord && (
 				<Popup
 					tipSize={5}
 					anchor="top"
-					longitude={currentPopUp.longitude}
-					latitude={currentPopUp.latitude}
+					longitude={currentPopUpRecord.longitude}
+					latitude={currentPopUpRecord.latitude}
 					closeOnClick={false}
-					onClose={this.closePopUp}
+                    onClose={this.closePopUp}
+                    key={currentPopUpRecord.recordId}
 				>
-                    <DetailView record={currentPopUp} />
+                    <DetailView key={currentPopUpRecord.recordId} record={currentPopUpRecord} />
 				</Popup>
 			)
 		);
@@ -118,18 +124,18 @@ export default class Map extends React.Component<IMapProps, IMapState> {
 				</div>
                 
                 {this.showPopUp()}
-                
+
 				{testData.map(record => (
-						<Marker
-							key={record.recordId}
-							latitude={record.latitude}
-							longitude={record.longitude}
-						>
-							<button className="marker-btn" onClick={() => this.setPopUp(record)}>
-								<img src="/gps.svg" alt={'GPS Icon'}/>
-							</button>
-						</Marker>
-					))}
+                    <Marker
+                        key={record.recordId}
+                        latitude={record.latitude}
+                        longitude={record.longitude}
+                    >
+                        <button className="marker-btn" onClick={() => this.setPopUp(record)}>
+                            <img src='/gps.svg' alt={'GPS Icon'}/>
+                        </button>
+                    </Marker>
+                ))}
 
 			</InteractiveMap>
 		);
