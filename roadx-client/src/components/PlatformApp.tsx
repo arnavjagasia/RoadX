@@ -1,15 +1,13 @@
 import React from 'react';
-import { Button, Navbar, NavbarGroup, Alignment, Overlay, Classes, Dialog } from '@blueprintjs/core';
+import { Button, Navbar, NavbarGroup, Alignment, Dialog } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-
+import { FilterSpec, RoadXRecord, DataDisplayMode, LIST_MODE, MAP_MODE } from '../types/types';
 import FilterPanel from './FilterPanel';
+import ListView from './ListView';
+import MapView from './MapView';
+import Uploader from './uploadPortal/Uploader';
 
 import "../styles/platformapp.css";
-import ListView from './ListView';
-import Map from './Map';
-import { FilterSpec, RoadXRecord, DataDisplayMode, LIST_MODE, MAP_MODE } from '../types/types';
-import { getDataByFilterSpec } from '../api/api';
-import Uploader from './uploadPortal/Uploader';
 
 interface IPlatformAppState {
     mode: DataDisplayMode,
@@ -106,7 +104,7 @@ export default class PlatformApp extends React.Component<{}, IPlatformAppState> 
       if(this.state.mode === MAP_MODE){
         return(
             <div className="app__data_display">
-                <Map data={this.state.data}/>
+                <MapView data={this.state.data} />
             </div>
         );
       }
@@ -130,8 +128,4 @@ export default class PlatformApp extends React.Component<{}, IPlatformAppState> 
            </div>
         )
     }
-    // Nav bar at top
-    // Map options on right
-    // Filter options on left
-
 }
