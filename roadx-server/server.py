@@ -18,7 +18,7 @@ from flask_pymongo import PyMongo
 import gridfs
 
 app = Flask(__name__)
-app.config["MONGO_URI"] = "mongodb://localhost:27017/RoadXDatabase"
+app.config["MONGO_URI"] = "mongodb+srv://roadxadmin:seniordesign@cluster0-mdzoy.mongodb.net/RoadXDatabase?retryWrites=true&w=majority"
 mongo = PyMongo(app)
 
 
@@ -53,7 +53,6 @@ def create():
     print("/create: Request validation successful")
 
     # Unpack the zip file and save images to mongo
-    imageBatchUploadId = data.get('imageBatchUploadId')
     filebytes = io.BytesIO(imageZip.read())
     imageZipFile = zipfile.ZipFile(filebytes)
     counter = 1
@@ -93,9 +92,8 @@ def create():
         mongo.db.images.insert_one(database_data)
         counter = counter + 1
 
-    response = {'ok': True}
-    return_code = 200
-    return (jsonify(response), return_code)
+    response = {'status': 200, 'ok': True}
+    return (jsonify(response), 200)
 
 def bytes_to_image(binary_data):
     image = Image.open(io.BytesIO(binary_data))
@@ -151,7 +149,7 @@ def analyzeImage():
         storage.put(output.getvalue(), filename=classified_filename, content_type="image/png")
 
     if all(score is not None for score in scores):
-        response = {'ok': True}
+        response = {'status': 200, 'ok': True}
         return (jsonify(response), 200)
     else:
         response = {'ok': False, 'message': 'Internal Error in classification model'}
