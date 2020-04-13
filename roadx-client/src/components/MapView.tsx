@@ -1,7 +1,6 @@
 import React from "react";
 import InteractiveMap, { Marker, Popup } from "react-map-gl";
-import { NavigationControl, FullscreenControl, ScaleControl } from 'react-map-gl';
-import { forwardRef } from 'react';
+import { NavigationControl, FullscreenControl } from 'react-map-gl';
 
 import { RoadXRecord, POTHOLE, LATERAL_CRACK, ALLIGATOR_CRACK, LONGITUDINAL_CRACK } from '../types/types';
 import DetailView from "./DetailView";
@@ -29,8 +28,8 @@ interface IMapState {
 }
 
 export const testData: Array<RoadXRecord> = [{
-		latitude: 39.9542353,
-		longitude: -75.2017891,
+		latitude: 39.94799,
+		longitude: -75.222728,
 		defectClassifications: [
 				{classification: POTHOLE, threshold: 1}
 		],
@@ -39,30 +38,6 @@ export const testData: Array<RoadXRecord> = [{
 		image: new Blob(),
 		recordId: "testrecord1"
 },
-{
-		latitude:39.96,
-		longitude: -75.19,
-		defectClassifications: [
-				{classification: LATERAL_CRACK, threshold: 0.45},
-				{classification: ALLIGATOR_CRACK, threshold: 0.36}
-		],
-		detectionTime: "0012041024",
-		uploadTime: "1241032",
-		image: new Blob(),
-		recordId: "testrecord2"
-},
-{
-		latitude: 39.97,
-		longitude: -75.18,
-		defectClassifications: [
-				{classification: POTHOLE, threshold: 0.45},
-				{classification: LONGITUDINAL_CRACK, threshold: 0.36}
-		],
-		detectionTime: "testTIme",
-		uploadTime: "testTime",
-		image: new Blob(),
-		recordId: "testrecord3"
-}
 ]
 
 export default class Map extends React.Component<IMapProps, IMapState> {
@@ -99,23 +74,6 @@ export default class Map extends React.Component<IMapProps, IMapState> {
 		const maxLongitude = mapBoundaries.getNorthEast()['lng'];
 		this.props.updateMapScope(minLatitude, minLongitude, maxLatitude, maxLongitude);
 	}
-
-	getMapBoundaries = () => {
-		// Get map boundaries
-		console.log(this.mapRef);
-		const myMap = this.mapRef.current.getMap();
-		const mapBoundaries = myMap.getBounds();
-		const northeast = mapBoundaries.getNorthEast();
-		const northwest = mapBoundaries.getNorthWest();
-		const southeast = mapBoundaries.getSouthEast();
-		const southwest = mapBoundaries.getSouthWest();
-		console.log('Northeast:', northeast);
-		console.log('Northwest:', northwest);
-		console.log('Southeast:', southeast);
-		console.log('Southwest:', southwest);
-	}
-
-	componentDidMount = () => this.getMapBoundaries();
 
     showPopUp() {
         const { currentPopUpRecord } = this.state;
@@ -163,7 +121,9 @@ export default class Map extends React.Component<IMapProps, IMapState> {
 
                 {this.showPopUp()}
 
-				{testData.map(record => (
+				{this.props.data.map(record => {
+					console.log(record)
+					return(
                     <Marker
                         key={record.recordId}
                         latitude={record.latitude}
@@ -173,7 +133,7 @@ export default class Map extends React.Component<IMapProps, IMapState> {
                             <img src='/gps.svg' alt={'GPS Icon'}/>
                         </button>
                     </Marker>
-                ))}
+				)})}
 
 			</InteractiveMap>
 		);

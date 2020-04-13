@@ -8,6 +8,7 @@ import MapView from './MapView';
 import Uploader from './uploadPortal/Uploader';
 
 import "../styles/platformapp.css";
+import { getDataByFilterSpec } from '../api/api';
 
 interface IPlatformAppState {
     mode: DataDisplayMode,
@@ -31,11 +32,16 @@ export default class PlatformApp extends React.Component<{}, IPlatformAppState> 
         uploaderIsOpen: false,
     }
 
+    componentDidMount =  async () => {
+        const { filters } = this.state;
+        const result: Array<RoadXRecord> =  await getDataByFilterSpec(filters);
+        this.setState({
+            data: result,
+        })
+    }
+
     updateFilters = async (filters: FilterSpec) => {
-        // const result: Array<RoadXRecord> =  await getDataByFilterSpec(filters);
-        // perhaps some post processing here TODO
-        console.log("API CALL")
-        const result: Array<RoadXRecord>= []
+        const result: Array<RoadXRecord> =  await getDataByFilterSpec(filters);
         this.setState({
             filters: filters,
             data: result,

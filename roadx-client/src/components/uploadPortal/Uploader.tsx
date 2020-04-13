@@ -107,7 +107,8 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
         let res = await analyzeImage(analyzeImageParams);
 
         // Toast result of analysis
-        let success: boolean = (res['status'] !== "500");
+        let success: boolean = (res['status'] === "200");
+
         if (success) {
             UploadToaster.show({ 
                 message: "Discovery Complete", 
