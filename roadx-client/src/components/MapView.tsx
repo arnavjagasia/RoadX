@@ -1,6 +1,7 @@
 import React from "react";
 import InteractiveMap, { Marker, Popup } from "react-map-gl";
 import { NavigationControl, FullscreenControl, ScaleControl } from 'react-map-gl';
+import { forwardRef } from 'react';
 
 import { RoadXRecord, POTHOLE, LATERAL_CRACK, ALLIGATOR_CRACK, LONGITUDINAL_CRACK } from '../types/types';
 import DetailView from "./DetailView";
@@ -62,6 +63,13 @@ export const testData: Array<RoadXRecord> = [{
 ]
 
 export default class Map extends React.Component<IMapProps, IMapState> {
+	private mapRef: any;
+
+  constructor(props: any) {
+    super(props);
+    this.mapRef = React.createRef();
+  }
+
 	state: IMapState = {
 		viewport: {
 			latitude: 39.953346252441406,
@@ -70,7 +78,7 @@ export default class Map extends React.Component<IMapProps, IMapState> {
 		},
 		currentPopUpRecord: null
     }
-    
+
     setPopUp = (record: RoadXRecord) => {
         this.setState({currentPopUpRecord: record})
     }
@@ -79,9 +87,26 @@ export default class Map extends React.Component<IMapProps, IMapState> {
         this.setState({currentPopUpRecord: undefined});
     }
 
+		getMapBoundaries = () => {
+		// Get map boundaries
+		console.log(this.mapRef);
+		const myMap = this.mapRef.current.getMap();
+		const mapBoundaries = myMap.getBounds();
+		const northeast = mapBoundaries.getNorthEast();
+		const northwest = mapBoundaries.getNorthWest();
+		const southeast = mapBoundaries.getSouthEast();
+		const southwest = mapBoundaries.getSouthWest();
+		console.log('Northeast:', northeast);
+		console.log('Northwest:', northwest);
+		console.log('Southeast:', southeast);
+		console.log('Southwest:', southwest);
+		}
+
+		componentDidMount = () => this.getMapBoundaries();
+
     showPopUp() {
         const { currentPopUpRecord } = this.state;
-        // Make sure the current record is not undefined 
+        // Make sure the current record is not undefined
 		return (
 			currentPopUpRecord && (
 				<Popup
@@ -108,6 +133,7 @@ export default class Map extends React.Component<IMapProps, IMapState> {
 				latitude={this.state.viewport.latitude}
 				longitude={this.state.viewport.longitude}
 				zoom={this.state.viewport.zoom}
+				ref={this.mapRef}
 				mapStyle='mapbox://styles/mapbox/streets-v11'
 				onViewportChange={(viewport) => {
 					this.setState({viewport });
@@ -122,7 +148,7 @@ export default class Map extends React.Component<IMapProps, IMapState> {
 				<div className= "map__scale-control">
 					<ScaleControl />
 				</div>
-                
+
                 {this.showPopUp()}
 
 				{testData.map(record => (
