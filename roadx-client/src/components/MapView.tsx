@@ -7,6 +7,8 @@ import { RoadXRecord, POTHOLE, LATERAL_CRACK, ALLIGATOR_CRACK, LONGITUDINAL_CRAC
 import DetailView from "./DetailView";
 
 import '../styles/map.css';
+import { Button } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
 
 // const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
 const MAPBOX_TOKEN ="pk.eyJ1IjoiYWRlbGVsaSIsImEiOiJjazhjMHdvMDUwZWttM2Z0N3lhbDc5cXdzIn0.44vjuMJE2Icp-hV1P1d3TQ";
@@ -14,6 +16,7 @@ const MAPBOX_TOKEN ="pk.eyJ1IjoiYWRlbGVsaSIsImEiOiJjazhjMHdvMDUwZWttM2Z0N3lhbDc5
 
 interface IMapProps {
 	data: Array<RoadXRecord>
+	updateMapScope: (minLatitude: number, minLongitude: number, maxLatitude: number, maxLongitude: number) => void;
 }
 
 interface IMapState {
@@ -65,10 +68,10 @@ export const testData: Array<RoadXRecord> = [{
 export default class Map extends React.Component<IMapProps, IMapState> {
 	private mapRef: any;
 
-  constructor(props: any) {
-    super(props);
-    this.mapRef = React.createRef();
-  }
+	constructor(props: IMapProps) {
+		super(props);
+		this.mapRef = React.createRef();
+	}
 
 	state: IMapState = {
 		viewport: {
@@ -85,9 +88,19 @@ export default class Map extends React.Component<IMapProps, IMapState> {
 
     closePopUp = () => {
         this.setState({currentPopUpRecord: undefined});
-    }
+	}
+	
+	refreshMapData = () => {
+		const myMap = this.mapRef.current.getMap();
+		const mapBoundaries = myMap.getBounds();
+		const minLatitude = mapBoundaries.getSouthWest()['lat'];
+		const minLongitude = mapBoundaries.getSouthWest()['lng'];
+		const maxLatitude = mapBoundaries.getNorthEast()['lat'];
+		const maxLongitude = mapBoundaries.getNorthEast()['lng'];
+		this.props.updateMapScope(minLatitude, minLongitude, maxLatitude, maxLongitude);
+	}
 
-		getMapBoundaries = () => {
+	getMapBoundaries = () => {
 		// Get map boundaries
 		console.log(this.mapRef);
 		const myMap = this.mapRef.current.getMap();
@@ -100,9 +113,9 @@ export default class Map extends React.Component<IMapProps, IMapState> {
 		console.log('Northwest:', northwest);
 		console.log('Southeast:', southeast);
 		console.log('Southwest:', southwest);
-		}
+	}
 
-		componentDidMount = () => this.getMapBoundaries();
+	componentDidMount = () => this.getMapBoundaries();
 
     showPopUp() {
         const { currentPopUpRecord } = this.state;
@@ -139,15 +152,14 @@ export default class Map extends React.Component<IMapProps, IMapState> {
 					this.setState({viewport });
 				}}
 			>
-				<div className= "map__full-screen-control">
-					<FullscreenControl />
-				</div>
-				<div className= "map__nav">
-					<NavigationControl />
-				</div>
-				<div className= "map__scale-control">
-					<ScaleControl />
-				</div>
+				<FullscreenControl className="map__full-screen-control"/>
+				<NavigationControl className= "map__nav"/>
+				<Button 
+					className="map__refresh-button"
+					text={"Search this area again"} 
+					icon={IconNames.REFRESH}
+					onClick={this.refreshMapData}
+				/>
 
                 {this.showPopUp()}
 

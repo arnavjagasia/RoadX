@@ -34,11 +34,29 @@ export default class PlatformApp extends React.Component<{}, IPlatformAppState> 
     updateFilters = async (filters: FilterSpec) => {
         // const result: Array<RoadXRecord> =  await getDataByFilterSpec(filters);
         // perhaps some post processing here TODO
+        console.log("API CALL")
         const result: Array<RoadXRecord>= []
         this.setState({
             filters: filters,
             data: result,
         })
+    }
+
+    updateMapScope = (
+        minLatitude: number, 
+        minLongitude: number, 
+        maxLatitude: number, 
+        maxLongitude: number
+    ) => {
+        console.log(minLatitude, minLongitude, maxLatitude, maxLongitude)
+        const newFilters: FilterSpec = {
+            minLatitude: minLatitude,
+            minLongitude: minLongitude,
+            maxLatitude: maxLatitude,
+            maxLongitude: maxLongitude,
+            ...this.state.filters,
+        }
+        this.updateFilters(newFilters);
     }
 
     changeMode = () => {
@@ -104,7 +122,10 @@ export default class PlatformApp extends React.Component<{}, IPlatformAppState> 
       if(this.state.mode === MAP_MODE){
         return(
             <div className="app__data_display">
-                <MapView data={this.state.data} />
+                <MapView 
+                    data={this.state.data} 
+                    updateMapScope={this.updateMapScope}
+                />
             </div>
         );
       }
