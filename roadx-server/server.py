@@ -37,7 +37,7 @@ def create():
     imageZip = request.files['imageFile']
 
     gps_file = request.files['gpsFile']
-    gps_file_stream = io.StringIO(gps_file.stream.read().decode("UTF8"), newline=None)
+    gps_file_stream = io.StringIO(gps_file.stream.read().decode("utf-8-sig"), newline=None)
     gpsCsv = csv.reader(gps_file_stream)
     timestamp_to_coords = utils.convertGpsCsvToDict(gpsCsv)
 

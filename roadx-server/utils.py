@@ -3,10 +3,11 @@
 def convertGpsCsvToDict(gpsCsv):
     result = {}
     for row in gpsCsv:
-        timestamp = row[0]
-        latitude = row[1]
-        longitude = row[2]
+        timestamp = row[0].strip()
+        latitude = row[1].strip()
+        longitude = row[2].strip()
         result[timestamp] = (longitude, latitude)
+    print(result)
     return result
         
 def should_add_entry(scores, classifications_list, threshold):
