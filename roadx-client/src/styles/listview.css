@@ -31,3 +31,9 @@
 .list_view_card__dialog-text {
     margin: 1em;
 }
+
+.list_view_card__image {
+    width: 100%;
+    height: auto;
+    max-width: 500px;
+}

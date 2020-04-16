@@ -16,6 +16,7 @@ from flask_cors import CORS, cross_origin
 from flask import Flask, request, jsonify
 from flask_pymongo import PyMongo
 import gridfs
+from bson.objectid import ObjectId
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/getDataByFilterSpec": {"origins": "http://localhost:3000"}})
@@ -224,7 +225,14 @@ def getDataByFilterSpec():
 
 
 # # Test that the image got stored
-@app.route('/testRetrieve', methods=['GET'])
+@app.route('/getImage', methods=['POST'])
 def testRetrieve():
-    print("HERE")
-    return mongo.send_file("2-sun-mar-08-2020-18:51:49-gmt-0400-(eastern-daylight-time)-classified")
+    _id = request.form.get('id', None)
+    print(_id)
+    doc = mongo.db.images.find_one({'_id': ObjectId(_id)})
+    print(doc)
+    classified_image_name = doc['classifiedImageFileName']
+    response = mongo.send_file(classified_image_name)
+    # response = jsonify(classified_image_name)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response

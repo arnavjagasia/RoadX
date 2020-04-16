@@ -4,7 +4,6 @@ import { Card, Button, Dialog } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 
 import '../styles/listview.css';
-import { ELEVATION_2 } from '@blueprintjs/core/lib/esm/common/classes';
 import DetailView from './DetailView';
 
 interface IListViewCardProps {
@@ -55,8 +54,6 @@ export default class ListViewCard extends React.Component<IListViewCardProps, IL
                 >
                     <DetailView record={record} />
                 </Dialog>
-                
-                
             </Card>
         )
     }
