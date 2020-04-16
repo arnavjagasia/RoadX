@@ -1,15 +1,14 @@
 import React from 'react';
-import { Button, Navbar, NavbarGroup, Alignment, Overlay, Classes, Dialog } from '@blueprintjs/core';
+import { Button, Navbar, NavbarGroup, Alignment, Dialog } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-
+import { FilterSpec, RoadXRecord, DataDisplayMode, LIST_MODE, MAP_MODE } from '../types/types';
 import FilterPanel from './FilterPanel';
+import ListView from './ListView';
+import MapView from './MapView';
+import Uploader from './uploadPortal/Uploader';
 
 import "../styles/platformapp.css";
-import ListView from './ListView';
-import Map from './Map';
-import { FilterSpec, RoadXRecord, DataDisplayMode, LIST_MODE, MAP_MODE } from '../types/types';
 import { getDataByFilterSpec } from '../api/api';
-import Uploader from './uploadPortal/Uploader';
 
 interface IPlatformAppState {
     mode: DataDisplayMode,
@@ -33,14 +32,37 @@ export default class PlatformApp extends React.Component<{}, IPlatformAppState> 
         uploaderIsOpen: false,
     }
 
+    componentDidMount =  async () => {
+        const { filters } = this.state;
+        const result: Array<RoadXRecord> =  await getDataByFilterSpec(filters);
+        this.setState({
+            data: result,
+        })
+    }
+
     updateFilters = async (filters: FilterSpec) => {
-        // const result: Array<RoadXRecord> =  await getDataByFilterSpec(filters);
-        // perhaps some post processing here TODO
-        const result: Array<RoadXRecord>= []
+        const result: Array<RoadXRecord> =  await getDataByFilterSpec(filters);
         this.setState({
             filters: filters,
             data: result,
         })
+    }
+
+    updateMapScope = (
+        minLatitude: number, 
+        minLongitude: number, 
+        maxLatitude: number, 
+        maxLongitude: number
+    ) => {
+        console.log(minLatitude, minLongitude, maxLatitude, maxLongitude)
+        const newFilters: FilterSpec = {
+            minLatitude: minLatitude,
+            minLongitude: minLongitude,
+            maxLatitude: maxLatitude,
+            maxLongitude: maxLongitude,
+            ...this.state.filters,
+        }
+        this.updateFilters(newFilters);
     }
 
     changeMode = () => {
@@ -106,7 +128,10 @@ export default class PlatformApp extends React.Component<{}, IPlatformAppState> 
       if(this.state.mode === MAP_MODE){
         return(
             <div className="app__data_display">
-                <Map data={this.state.data}/>
+                <MapView 
+                    data={this.state.data} 
+                    updateMapScope={this.updateMapScope}
+                />
             </div>
         );
       }
@@ -130,8 +155,4 @@ export default class PlatformApp extends React.Component<{}, IPlatformAppState> 
            </div>
         )
     }
-    // Nav bar at top
-    // Map options on right
-    // Filter options on left
-
 }

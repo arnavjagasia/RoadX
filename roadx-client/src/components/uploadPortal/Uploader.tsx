@@ -4,9 +4,16 @@ import FileUploader from './FileUploader';
 import DeviceRegisterer from './DeviceRegisterer';
 
 import '../../styles/uploader.css';
-import { Button } from '@blueprintjs/core';
+import { Button, Toaster, Position, Intent } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { ICreateParams, create, IAnalyzeImageParams, analyzeImage } from '../../api/api';
+
+// Toaster for generic alerts
+const UploadToaster = Toaster.create({
+    className: "upload-toaster",
+    position: Position.TOP,
+});
+
 
 // Define Uploader States
 export type UploaderState = string | undefined;
@@ -18,6 +25,11 @@ const DISCOVERY_STATE: UploaderState = "Defect Discovery";
 
 const uploaderStates: Array<UploaderState> = [DEVICE_SELECTOR_STATE, IMAGE_UPLOADER_STATE, GPS_UPLOADER_STATE, DISCOVERY_STATE];
 
+// Use this for spinner wheel on analyzing pane
+type UploaderMode = string;
+const UPLOADING_MODE: UploaderMode = "Uploading";
+const ANALYZING_MODE: UploaderMode = "Analyzing";
+
 interface IUploaderState {
     uploaderState: UploaderState;
     uploadTime: Date;
@@ -25,6 +37,7 @@ interface IUploaderState {
     deviceId?: number | undefined;
     imageFile?: File;
     gpsFile?: File;
+    uploaderMode: UploaderMode;
 }
 
 export default class Uploader extends React.Component<{}, IUploaderState> {
@@ -36,6 +49,7 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
         userId: undefined,
         imageFile: undefined,
         gpsFile: undefined,
+        uploaderMode: UPLOADING_MODE,
     };
 
     handleUploaderStateChange = (newState: UploaderState) => {
@@ -65,38 +79,14 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
         })
     }
 
-    // uploadData = async () => {
-    //     const timestamp: string = this.state.uploadTime.toString();
-    //     const imageBatchUploadId: string = this.state.deviceId + "-images-" + timestamp.replace(/\s+/g, '-').toLowerCase();
-    //     const imageFile: Blob = this.state.imageFile!; // Blobs allow us to pass binary data
-    //     const gpsUploadId: string = this.state.deviceId + "-gps-" + timestamp.replace(/\s+/g, '-').toLowerCase();
-    //     const gpsFile: Blob = this.state.gpsFile!; // Blobs allow us to pass binary data
-
-    //     const formData: FormData = new FormData();
-    //     formData.append('deviceId', String(this.state.deviceId!))
-    //     formData.append('timestamp', timestamp)
-    //     formData.append('imageBatchUploadId', imageBatchUploadId)
-    //     formData.append('imageFile', imageFile)
-    //     formData.append('gpsUploadId', gpsUploadId)
-    //     formData.append('gpsFile', gpsFile)
-
-    //     await fetch('http://localhost:5000/create', {
-    //         method: 'POST',
-    //         mode: 'no-cors', // cannot pass headers with no-cors
-    //         body: formData,
-    //     }).then(response => {
-    //         console.log(response)
-    //     }).catch((reason) =>
-    //         console.log(reason)
-    //     )
-
-    //     return {
-    //         'imageBatchUploadId': imageBatchUploadId,
-    //         'gpsUploadId': gpsUploadId
-    //     }
-    // }
-
     runAnalysis = async () => {
+        // Toast that analysis has started 
+        UploadToaster.show({
+            message: "Queued for Automated Discovery",
+            intent: Intent.NONE,
+            icon: IconNames.GRAPH,
+        })
+
         const timestamp: string = this.state.uploadTime.toString();
         const createParams: ICreateParams = {
             timestamp: timestamp,
@@ -107,27 +97,32 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
             deviceId: String(this.state.deviceId!),
         }
 
-        // const { imageBatchUploadId, gpsUploadId } = await this.uploadData();
         const { imageBatchUploadId, gpsUploadId } = await create(createParams); // maybe await
-
-        // const formData: FormData = new FormData();
-        // formData.append('imageBatchUploadId', imageBatchUploadId)
-        // formData.append('gpsUploadId', gpsUploadId)
-        // await fetch('http://localhost:5000/analyzeImage', {
-        //     method: 'POST',
-        //     mode: 'no-cors', // cannot pass headers with no-cors
-        //     body: formData
-        // }).then(response => {
-        //     console.log(response)
-        // }).catch((reason) =>
-        //     console.log(reason)
-        // )
-
+        
         const analyzeImageParams: IAnalyzeImageParams = {
             imageBatchUploadId: imageBatchUploadId,
             gpsUploadId: gpsUploadId
         }
-        await analyzeImage(analyzeImageParams); //TODO maybe await
+
+        let res = await analyzeImage(analyzeImageParams);
+
+        // Toast result of analysis
+        let success: boolean = (res['status'] === "200");
+
+        if (success) {
+            UploadToaster.show({ 
+                message: "Discovery Complete", 
+                intent: Intent.SUCCESS,
+                icon: IconNames.TICK
+            });
+        } else {
+            UploadToaster.show({ 
+                message: "Discovery Failed. " + res['message'], 
+                intent: Intent.WARNING,
+                icon: IconNames.CROSS
+            });
+        }
+
     }
 
     renderWindowContents() {

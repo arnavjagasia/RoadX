@@ -47,7 +47,7 @@ export default class ListView extends React.Component<IListViewProps, {}> {
     render() {
         return(
             <div className="list_view__container">
-                {testData.map((record: RoadXRecord) => {
+                {this.props.data.map((record: RoadXRecord) => {
                     return(
                         <ListViewCard
                             key={record.recordId}

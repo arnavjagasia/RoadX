@@ -1,15 +1,6 @@
 // File for API Calls
 
-import { FilterSpec } from "../types/types";
-import { Toaster, Position, Intent, Icon } from "@blueprintjs/core";
-import { IconNames } from "@blueprintjs/icons";
-
-// Toaster for generic alerts
-export const AppToaster = Toaster.create({
-    className: "platform-toaster",
-    position: Position.TOP,
-});
-
+import { FilterSpec, RoadXRecord, ScoredClassification } from "../types/types";
 // /create
 export interface ICreateParams {
     timestamp: string, 
@@ -31,10 +22,8 @@ export async function create(params: ICreateParams) {
 
     await fetch('http://localhost:5000/create', {
         method: 'POST',
-        mode: 'no-cors', // cannot pass headers with no-cors
+        mode: 'cors', // cannot pass headers with no-cors
         body: formData,
-    }).then(response => {
-        console.log(response)
     }).catch((reason) =>
         console.log(reason)
     )
@@ -51,30 +40,20 @@ export interface IAnalyzeImageParams {
     gpsUploadId: string,
 }
 
-export async function analyzeImage(params: IAnalyzeImageParams) {
+export async function analyzeImage(params: IAnalyzeImageParams): Promise<{[key: string]: string}> {
     const formData: FormData = new FormData();
     formData.append('imageBatchUploadId', params.imageBatchUploadId)
     formData.append('gpsUploadId', params.imageBatchUploadId)
-    await fetch('http://localhost:5000/analyzeImage', {
+    let res: {[key: string]: string} = await fetch('http://localhost:5000/analyzeImage', {
         method: 'POST',
-        mode: 'no-cors', // cannot pass headers with no-cors
+        mode: 'cors', // cannot pass headers with no-cors
         body: formData
     }).then(response => {
-        console.log(response)
-        AppToaster.show({ 
-            message: "Analysis Complete", 
-            intent: Intent.SUCCESS,
-            icon: IconNames.TICK
-        });
-    }).catch((reason) => {
-        console.log(reason)
-        AppToaster.show({ 
-            message: "Analysis Failed. " + reason, 
-            intent: Intent.WARNING,
-            icon: IconNames.CROSS
-        });
+        return {"status": String(response.status), "message": "OK"};
+    }).catch(reason => {
+        return {"status": "500", "message": reason};
     })
-    
+    return res;  
 }
 
 export async function getDataByFilterSpec(f: FilterSpec) {
@@ -84,15 +63,56 @@ export async function getDataByFilterSpec(f: FilterSpec) {
     formData.append("minLatitude", String(f.minLatitude));
     formData.append("maxLatitude", String(f.maxLatitude));
     formData.append("threshold", String(f.threshold));
-    formData.append("defectClassifications", String(f.defectClassifications)); // will need to deserialize this to list on backend
-    return await fetch('http://localhost:5000/getAllByFilter', {
+    formData.append("defectClassifications", f.defectClassifications.toString()); // will need to deserialize this to list on backend
+    return await fetch('http://localhost:5000/getDataByFilterSpec', {
         method: 'POST',
-        mode: 'no-cors', // cannot pass headers with no-cors
-        body: formData
-    }).then(response => {
-        console.log(response)
-        return response.json() // Make sure this actually returns data
-    }).then(data => {
-        return data;
+        mode: 'cors', // cannot pass headers with no-cors
+        body: formData,
+        headers: {
+           'Accept': 'text/plain'
+        }
     })
+    .then(r => r.json())
+    .then(r => {
+        const records: Array<RoadXRecord> = []
+        for (var key in r) {
+            const record: RoadXRecord | null = convertJsonToRoadXRecord(key, r[key]);
+            if (record) {
+                records.push(record)
+            }
+            
+        }
+        return records
+    })
+    .catch(err => {
+        console.log(err)
+        return []
+    })
+}
+
+function convertJsonToRoadXRecord(key: string, json: any): RoadXRecord | null {
+    const classificationsAndScores: string[] = json['scores']
+    if (classificationsAndScores.length === 0) {
+        return null
+    }
+    const defectClassifications: ScoredClassification[] = classificationsAndScores.map(c => {
+        const classification: string = c.split(": ")[0]
+        const threshold: string = c.split(": ")[1].replace("%", "")
+        return {
+            'classification': classification,
+            'threshold': +threshold,
+        }
+    })
+
+    const record: RoadXRecord = {
+        latitude: json['latitude'],
+        longitude: json['longitude'],
+        defectClassifications: defectClassifications,
+        detectionTime: json['timestamp'],
+        uploadTime: json['uploadTime'],
+        image: undefined,
+        recordId: key,
+    }
+
+    return record;
 }

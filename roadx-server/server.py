@@ -1,5 +1,5 @@
 import os
-import json
+from json import *
 import io
 import zipfile
 import csv
@@ -12,13 +12,14 @@ import model
 import tensorflow as tf
 
 import utils
-
+from flask_cors import CORS, cross_origin
 from flask import Flask, request, jsonify
 from flask_pymongo import PyMongo
 import gridfs
 
 app = Flask(__name__)
-app.config["MONGO_URI"] = "mongodb://localhost:27017/RoadXDatabase"
+cors = CORS(app, resources={r"/getDataByFilterSpec": {"origins": "http://localhost:3000"}})
+app.config["MONGO_URI"] = "mongodb+srv://roadxadmin:seniordesign@cluster0-mdzoy.mongodb.net/RoadXDatabase?retryWrites=true&w=majority"
 mongo = PyMongo(app)
 
 
@@ -36,7 +37,7 @@ def create():
     imageZip = request.files['imageFile']
 
     gps_file = request.files['gpsFile']
-    gps_file_stream = io.StringIO(gps_file.stream.read().decode("UTF8"), newline=None)
+    gps_file_stream = io.StringIO(gps_file.stream.read().decode("utf-8-sig"), newline=None)
     gpsCsv = csv.reader(gps_file_stream)
     timestamp_to_coords = utils.convertGpsCsvToDict(gpsCsv)
 
@@ -53,7 +54,6 @@ def create():
     print("/create: Request validation successful")
 
     # Unpack the zip file and save images to mongo
-    imageBatchUploadId = data.get('imageBatchUploadId')
     filebytes = io.BytesIO(imageZip.read())
     imageZipFile = zipfile.ZipFile(filebytes)
     counter = 1
@@ -87,15 +87,15 @@ def create():
             print("Adding extra data")
             (longitude, latitude) = timestamp_to_coords[timestamp]
             database_data['timestamp'] = imageName
-            database_data['longitude'] = longitude
-            database_data['latitude'] = latitude
+            database_data['longitude'] = float(longitude)
+            database_data['latitude'] = float(latitude)
 
         mongo.db.images.insert_one(database_data)
         counter = counter + 1
 
-    response = {'ok': True}
-    return_code = 200
-    return (jsonify(response), return_code)
+    response = jsonify({"status": 200})
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return (response, 200)
 
 def bytes_to_image(binary_data):
     image = Image.open(io.BytesIO(binary_data))
@@ -132,7 +132,11 @@ def analyzeImage():
 
         # Run model
         results_dict = model.run_model(image_list)
-        scores = results_dict[filename]['scores']
+        model_output_scores = results_dict[filename]['scores']
+        scores = []
+        for output in model_output_scores:
+            if "N/A" not in output:
+                scores.append(output)
         classifiedImage = Image.fromarray(results_dict[filename]['classifiedImage'])
         print("/analyze: Score = ", scores)
         # Update mongo document about this image with classification results
@@ -151,20 +155,22 @@ def analyzeImage():
         storage.put(output.getvalue(), filename=classified_filename, content_type="image/png")
 
     if all(score is not None for score in scores):
-        response = {'ok': True}
+        response = {'status': 200, 'ok': True}
         return (jsonify(response), 200)
     else:
         response = {'ok': False, 'message': 'Internal Error in classification model'}
         return (jsonify(response), 500)
 
-@app.route('/getAllInRange', methods=['POST'])
-def getAllInRange():
+@app.route('/getDataByFilterSpec', methods=['POST'])
+def getDataByFilterSpec():
      # Validate Request
     data = request.form
     minLongitude = data.get('minLongitude', None)
     maxLongitude = data.get('maxLongitude', None)
     minLatitude = data.get('minLatitude', None)
     maxLatitude = data.get('maxLatitude', None)
+    threshold = data.get('threshold', None)
+    defectClassificationsStr = data.get('defectClassifications', None)
 
     # Request parameters validation
     validators = []
@@ -172,30 +178,45 @@ def getAllInRange():
     validators.append(bool(maxLongitude is not None))
     validators.append(bool(minLatitude is not None))
     validators.append(bool(maxLatitude is not None))
+    validators.append(bool(threshold) is not None)
+    validators.append(bool(defectClassificationsStr) is not None)
 
     if not all(val == True for val in validators):
         return(jsonify({'ok': False, 'message': 'Bad request'}), 400)
-    print("/getAllInRange: Request validation successful")
+    print("/getDataByFilterSpec: Request validation successful")
 
+    # Get everything from DB in range
+    print(minLongitude)
+    print(maxLongitude)
+    print(minLatitude)
+    print(maxLatitude)
     cursor =  mongo.db.images.find({'$and': [
-        {'longitude': {'$gt': minLongitude}},
-        {'longitude': {'$lt': maxLongitude}},
-        {'latitude': {'$gt': minLatitude}},
-        {'latitude': {'$lt': maxLatitude}},
+        {'longitude': {'$lt': float(maxLatitude), '$gt': float(minLongitude)}},
+        {'latitude': {'$lt': float(maxLatitude), '$gt': float(minLatitude)}},
     ]})
 
-    results = {}
-    for document in cursor:
-        imageFileName = document['imagemageFileName']
-        longitude = document['longitude']
-        latitude = document['latitude']
-        results[imageFileName] = (longitude, latitude)
+    # Deserialize the classifications
+    if len(defectClassificationsStr) == 0:
+        classifications_list = []
+    else:
+        classifications_list = defectClassificationsStr.split(",")
+        classifications_list = [item.lower() for item in classifications_list]
 
-    response = Flask.response_class(
-        response=jsonify(results),
-        status=200,
-        mimetype='application/json'
-    )
+    results = {}
+    print("Threshold", threshold)
+    for document in cursor:
+        print(document)
+        scores = document['scores']
+        if utils.should_add_entry(scores, classifications_list, threshold):
+            key = str(document['_id'])
+            del document['_id']
+            results[key] = document
+
+    print("Results", results)
+    resultString = str(results).replace('\'', '\"')
+
+    response = jsonify(results)
+    response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
 @app.route('/addDevice', methods=['POST'])
@@ -221,7 +242,7 @@ def getDevices():
 
 
 # # Test that the image got stored
-# @app.route('/testRetrieve', methods=['GET'])
-# def testRetrieve():
-#     print("HERE")
-#     return mongo.send_file("2-sun-mar-08-2020-18:51:49-gmt-0400-(eastern-daylight-time)-classified")
+@app.route('/testRetrieve', methods=['GET'])
+def testRetrieve():
+    print("HERE")
+    return mongo.send_file("2-sun-mar-08-2020-18:51:49-gmt-0400-(eastern-daylight-time)-classified")
