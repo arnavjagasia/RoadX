@@ -23,3 +23,10 @@
     padding: 1em;
     width: 100%;
 }
+
+.registerer__adder {
+    display: flex;
+    margin-left: 5px;
+    justify-content: center;
+    /* width: 100%; */
+}

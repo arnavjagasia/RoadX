@@ -198,6 +198,28 @@ def getAllInRange():
     )
     return response
 
+@app.route('/addDevice', methods=['POST'])
+def addDevice():
+    data = request.form
+    deviceID = data.get('deviceId', None)
+    devicesDocument = {"deviceID": deviceID}
+    mongo.db.devices.insert_one(devicesDocument)
+    response = {'ok': True}
+    return_code = 200
+    return (jsonify(response), return_code)
+
+
+@app.route('/getDevices', methods=['GET'])
+def getDevices():
+    devices = mongo.db.devices.find()
+    response = Flask.response_class(
+        response=jsonify(devices),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
+
+
 # # Test that the image got stored
 # @app.route('/testRetrieve', methods=['GET'])
 # def testRetrieve():
