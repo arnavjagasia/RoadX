@@ -225,19 +225,23 @@ def addDevice():
     deviceID = data.get('deviceId', None)
     devicesDocument = {"deviceID": deviceID}
     mongo.db.devices.insert_one(devicesDocument)
-    response = {'ok': True}
-    return_code = 200
-    return (jsonify(response), return_code)
+    response = jsonify({'ok': True})
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return (response)
 
 
 @app.route('/getDevices', methods=['GET'])
 def getDevices():
-    devices = mongo.db.devices.find()
+    cursor = mongo.db.devices.find()
+    devices = []
+    for d in cursor :
+        devices.append(d)
     response = Flask.response_class(
         response=jsonify(devices),
         status=200,
         mimetype='application/json'
     )
+    response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
 

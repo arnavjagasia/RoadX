@@ -136,7 +136,7 @@ export default class DeviceRegisterer extends React.Component<IDeviceRegistererP
                 />
                 <div className="registerer__adder">
                   <button
-                            onClick={() => handleSubmit(this.state.inputDeviceNum)}
+                            onClick={this.uploadNewDevice}
                         >
                           Submit
                   </button>
