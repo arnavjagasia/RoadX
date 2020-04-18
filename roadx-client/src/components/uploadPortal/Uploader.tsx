@@ -1,5 +1,4 @@
 import React from 'react';
-import UploaderNav from './UploaderNav';
 import FileUploader from './FileUploader';
 import DeviceRegisterer from './DeviceRegisterer';
 
@@ -14,7 +13,6 @@ const UploadToaster = Toaster.create({
     position: Position.TOP,
 });
 
-
 // Define Uploader States
 export type UploaderState = string | undefined;
 
@@ -23,12 +21,10 @@ const IMAGE_UPLOADER_STATE: UploaderState = "Upload Image Files";
 const GPS_UPLOADER_STATE: UploaderState = "Upload GPS Files";
 const DISCOVERY_STATE: UploaderState = "Defect Discovery";
 
-const uploaderStates: Array<UploaderState> = [DEVICE_SELECTOR_STATE, IMAGE_UPLOADER_STATE, GPS_UPLOADER_STATE, DISCOVERY_STATE];
-
 // Use this for spinner wheel on analyzing pane
 type UploaderMode = string;
 const UPLOADING_MODE: UploaderMode = "Uploading";
-const ANALYZING_MODE: UploaderMode = "Analyzing";
+// const ANALYZING_MODE: UploaderMode = "Analyzing";
 
 interface IUploaderState {
     uploaderState: UploaderState;

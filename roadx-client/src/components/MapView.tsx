@@ -2,7 +2,7 @@ import React from "react";
 import InteractiveMap, { Marker, Popup } from "react-map-gl";
 import { NavigationControl, FullscreenControl } from 'react-map-gl';
 
-import { RoadXRecord, POTHOLE, LATERAL_CRACK, ALLIGATOR_CRACK, LONGITUDINAL_CRACK } from '../types/types';
+import { RoadXRecord } from '../types/types';
 import DetailView from "./DetailView";
 
 import '../styles/map.css';
@@ -26,19 +26,6 @@ interface IMapState {
 	},
 	currentPopUpRecord: RoadXRecord | undefined,
 }
-
-export const testData: Array<RoadXRecord> = [{
-		latitude: 39.94799,
-		longitude: -75.222728,
-		defectClassifications: [
-				{classification: POTHOLE, threshold: 1}
-		],
-		detectionTime: "0012041024",
-		uploadTime: "1241032",
-		image: new Blob(),
-		recordId: "testrecord1"
-},
-]
 
 export default class Map extends React.Component<IMapProps, IMapState> {
 	private mapRef: any;
