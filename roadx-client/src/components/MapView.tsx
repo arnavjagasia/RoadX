@@ -3,7 +3,7 @@ import InteractiveMap, { Marker, Popup } from "react-map-gl";
 import { NavigationControl, FullscreenControl } from 'react-map-gl';
 
 import { RoadXRecord } from '../types/types';
-import DetailView from "./DetailView";
+import DetailView from "./detailView/DetailView";
 
 import '../styles/map.css';
 import { Button } from "@blueprintjs/core";
@@ -11,11 +11,14 @@ import { IconNames } from "@blueprintjs/icons";
 
 // const MAPBOX_TOKEN = process.env.REACT_APP_MAPBOX_TOKEN;
 const MAPBOX_TOKEN ="pk.eyJ1IjoiYWRlbGVsaSIsImEiOiJjazhjMHdvMDUwZWttM2Z0N3lhbDc5cXdzIn0.44vjuMJE2Icp-hV1P1d3TQ";
-
+const PHILADELPHIA_CENTER_LATITUTDE = 39.953346252441406;
+const PHILADELPHIA_CENTER_LONGITUDE = -75.1633529663086;
+const DEFAULT_ZOOM = 10;
 
 interface IMapProps {
 	data: Array<RoadXRecord>
 	updateMapScope: (minLatitude: number, minLongitude: number, maxLatitude: number, maxLongitude: number) => void;
+	currentRecord?: RoadXRecord
 }
 
 interface IMapState {
@@ -29,7 +32,6 @@ interface IMapState {
 
 export default class Map extends React.Component<IMapProps, IMapState> {
 	private mapRef: any;
-
 	constructor(props: IMapProps) {
 		super(props);
 		this.mapRef = React.createRef();
@@ -37,11 +39,11 @@ export default class Map extends React.Component<IMapProps, IMapState> {
 
 	state: IMapState = {
 		viewport: {
-			latitude: 39.953346252441406,
-			longitude: -75.1633529663086,
-			zoom: 10
+			latitude: this.props.currentRecord ? this.props.currentRecord.latitude : PHILADELPHIA_CENTER_LATITUTDE,
+			longitude: this.props.currentRecord ? this.props.currentRecord.longitude : PHILADELPHIA_CENTER_LONGITUDE,
+			zoom: this.props.currentRecord ? 20 : DEFAULT_ZOOM
 		},
-		currentPopUpRecord: null
+		currentPopUpRecord: undefined
     }
 
     setPopUp = (record: RoadXRecord) => {
@@ -53,6 +55,7 @@ export default class Map extends React.Component<IMapProps, IMapState> {
 	}
 	
 	refreshMapData = () => {
+		// this.closePopUp();
 		const myMap = this.mapRef.current.getMap();
 		const mapBoundaries = myMap.getBounds();
 		const minLatitude = mapBoundaries.getSouthWest()['lat'];
@@ -95,6 +98,7 @@ export default class Map extends React.Component<IMapProps, IMapState> {
 				mapStyle='mapbox://styles/mapbox/streets-v11'
 				onViewportChange={(viewport) => {
 					this.setState({viewport });
+					this.closePopUp();
 				}}
 			>
 				<FullscreenControl className="map__full-screen-control"/>
@@ -109,7 +113,6 @@ export default class Map extends React.Component<IMapProps, IMapState> {
                 {this.showPopUp()}
 
 				{this.props.data.map(record => {
-					console.log(record)
 					return(
                     <Marker
                         key={record.recordId}

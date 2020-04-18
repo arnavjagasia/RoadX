@@ -1,0 +1,12 @@
+.classifier__container {
+    display: flex;
+    flex-flow: row;
+}
+
+.classifier__selector {
+    margin: 1em;
+}
+
+.classifier__button {
+    margin: 1em;
+}

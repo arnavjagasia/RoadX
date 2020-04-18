@@ -425,7 +425,7 @@ def get_classes_scores(image,
             elif class_name == 'D11':
                 class_name = 'Lateral Crack'
             elif class_name == 'D20':
-                class_name = 'Aligator Crack'
+                class_name = 'Alligator Crack'
             elif class_name == 'D40':
                 class_name = 'Pothole'
             elif class_name == 'D43':

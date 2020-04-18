@@ -7,16 +7,29 @@
 
 .list_view_card__container {
     display: flex;
-    flex-flow: row;
-    justify-content: space-between;
+    flex-flow: column;
     margin: 1em;
 }
 
-.list_view_card__info_button {
+.list_view_card__header {
     display: flex;
-    padding-left: 0;
-    padding-right: 0;
     flex-flow: row;
+    justify-content: space-between;
+}
+
+.list_view_card__buttons {
+    display: flex;
+    flex-flow: row;
+}
+
+.list_view_card__button {
+    display: flex;
+    flex-flow: row;
+    margin-right: 1em;
+}
+
+.list_view_card__button-popover {
+    margin: 1em;
 }
 
 .list_view_card__text {
@@ -25,11 +38,8 @@
     padding-right: 0;
     flex-flow: column;
     justify-content: center;
-    text-size: 1em;
-}
-
-.list_view_card__dialog-text {
-    margin: 1em;
+    font-size: 1.1em;
+    font-weight: bold;
 }
 
 .list_view_card__image {

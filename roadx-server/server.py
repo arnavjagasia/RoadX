@@ -207,16 +207,13 @@ def getDataByFilterSpec():
         classifications_list = [item.lower() for item in classifications_list]
 
     results = {}
-    print("Threshold", threshold)
     for document in cursor:
-        print(document)
         scores = document['scores']
         if utils.should_add_entry(scores, classifications_list, threshold):
             key = str(document['_id'])
             del document['_id']
-            results[key] = document
-
-    print("Results", results)
+            results[key] = document 
+            
     resultString = str(results).replace('\'', '\"')
 
     response = jsonify(results)
@@ -249,13 +246,29 @@ def getDevices():
 
 # # Test that the image got stored
 @app.route('/getImage', methods=['POST'])
-def testRetrieve():
+def getImage():
+    print("HERE")
     _id = request.form.get('id', None)
-    print(_id)
     doc = mongo.db.images.find_one({'_id': ObjectId(_id)})
-    print(doc)
     classified_image_name = doc['classifiedImageFileName']
     response = mongo.send_file(classified_image_name)
-    # response = jsonify(classified_image_name)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+
+
+@app.route('/submitOverride', methods=['POST'])
+def submitOverride():
+    data = request.form
+    _id =  data.get('id', None)
+    classificationOverride =  data.get('classificationOverride', None)
+
+    mongo.db.images.update_one(
+        {'_id': ObjectId(_id)},
+        {'$set':{
+            'override': classificationOverride,
+        }}
+    )
+
+    response = jsonify({'ok': True})
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response

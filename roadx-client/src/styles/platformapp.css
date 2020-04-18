@@ -9,11 +9,16 @@
     width: 100%;
 }
 
+.app__nav {
+    max-height: 6vh;
+}
+
 .app__contents {
     display: flex;
     flex-direction: row;
     background-color: #E1E8ED;
     flex: 1;
+    max-height: 94vh;
 }
 
 .app__navbar-text {
@@ -32,4 +37,5 @@
     flex: 5;
     background-color: #293742;
     width: 100%;
+    overflow-y: scroll;
 }
