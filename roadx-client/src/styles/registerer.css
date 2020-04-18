@@ -26,7 +26,9 @@
 
 .registerer__adder {
     display: flex;
+    flex-flow: row;
     margin-left: 5px;
     justify-content: center;
-    /* width: 100%; */
+    color: #293742;
+    align-items: center;
 }

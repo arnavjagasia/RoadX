@@ -235,12 +235,10 @@ def getDevices():
     cursor = mongo.db.devices.find()
     devices = []
     for d in cursor :
+        del d['_id']
         devices.append(d)
-    response = Flask.response_class(
-        response=jsonify(devices),
-        status=200,
-        mimetype='application/json'
-    )
+
+    response=jsonify(devices)
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 

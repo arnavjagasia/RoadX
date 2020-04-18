@@ -1,8 +1,10 @@
 import React from 'react';
 import { Select, ItemRenderer } from '@blueprintjs/select';
-import { MenuItem, Button } from '@blueprintjs/core';
+import { MenuItem, Button, Toaster, Position, Intent, InputGroup } from '@blueprintjs/core';
 
 import '../../styles/registerer.css';
+import { getAllDevices, IAddDeviceParams, addDevice } from '../../api/api';
+import { IconNames } from '@blueprintjs/icons';
 
 interface IDeviceRegistererProps {
     registerDeviceId: (id: Number) => void;
@@ -10,17 +12,20 @@ interface IDeviceRegistererProps {
 }
 
 interface IDeviceRegisterState {
-    devices: Number[];
+    devices: number[];
     inputDeviceNum : string;
 }
 
 const DeviceSelector = Select.ofType<Number>();
 
+const DeviceToaster = Toaster.create({
+    className: "upload-toaster",
+    position: Position.TOP,
+});
 
-// Hard-coding device id's for now
-const devices: number[] = [1, 2, 4, 10, 50, 67]
+
 export const renderDevice: ItemRenderer<Number> = (deviceId, { handleClick, modifiers, query }) => {
-    const text = `Device #${deviceId}`;
+    const text: string = `Device #${deviceId}`;
     return (
         <MenuItem
             text={text}
@@ -30,26 +35,27 @@ export const renderDevice: ItemRenderer<Number> = (deviceId, { handleClick, modi
     );
 };
 
-
-function handleSubmit(value : string) {
-  var y = +value
-  if(devices.indexOf(y) == -1 && !isNaN(y)) {
-    devices.push(y)
-    console.log("Number Added")
-    console.log(devices)
-  }
-  else {
-    console.log("Device Number Already Exists")
-    console.log(devices)
-  }
-}
-
-
 export default class DeviceRegisterer extends React.Component<IDeviceRegistererProps, IDeviceRegisterState> {
     state: IDeviceRegisterState = {
         devices : [],
         inputDeviceNum : ""
     }
+
+    componentDidMount=() =>  {
+        this.getDevicesFromDatabase()
+    }
+
+    getDevicesFromDatabase = async () => {
+        const deviceIds: number[] = await getAllDevices();
+        if (deviceIds.length === 0) {
+            return
+        }
+
+        this.setState({
+            devices: deviceIds
+        })
+    }
+
     renderText() {
         const landingText: string = "Let's begin. Please select your RoadX device."
         return (
@@ -57,10 +63,6 @@ export default class DeviceRegisterer extends React.Component<IDeviceRegistererP
                 {landingText}
             </div>
         )
-    }
-
-    componentDidMount=() =>  {
-        this.getAllDevices()
     }
 
     renderDeviceSelector() {
@@ -89,62 +91,56 @@ export default class DeviceRegisterer extends React.Component<IDeviceRegistererP
           inputDeviceNum : e.target.value
       })
       console.log("Input Received")
-   }
+    }
 
-   
-   getAllDevices = async () => {
-    await fetch('http://localhost:5000/getDevices', {
-        method: 'GET',
-        mode: 'no-cors', // cannot pass headers with no-cors
-    }).then(response => response.json()).then(devices => {
-        this.setState({
-            devices : devices,
-        })
-    }).catch((reason) =>
-        console.log(reason)
-    )
-}
+    uploadNewDevice = async () => {
+        // Add new device to the database
+        const { inputDeviceNum, devices } = this.state;
+        const params: IAddDeviceParams = {
+            inputDeviceNum: inputDeviceNum,
+            devices: devices
+        }
 
-   uploadNewDevice = async () => {
-        const formData: FormData = new FormData();
-        formData.append('deviceId', String(this.state.inputDeviceNum))
-
-        await fetch('http://localhost:5000/addDevice', {
-            method: 'POST',
-            mode: 'no-cors', // cannot pass headers with no-cors
-            body: formData,
-        }).then(response => {
-            console.log(response)
-        }).catch((reason) =>
-            console.log(reason)
-        )
-        await this.getAllDevices()
+        if (devices.includes(Number(inputDeviceNum))) {
+            // Don't send API request for device that is already registered
+            DeviceToaster.show({
+                message: "Device #" + inputDeviceNum + " is already registered",
+                intent: Intent.WARNING,
+                icon: IconNames.UPLOAD,
+            }) 
+        } else {
+            // Add new device to database
+            const success: boolean = await addDevice(params);
+            if (!success) {
+                DeviceToaster.show({
+                    message: "Failed to add new device",
+                    intent: Intent.DANGER,
+                    icon: IconNames.UPLOAD,
+                })
+            }
+        }
+        
+        // Refresh the list of devices for the device selector
+        await this.getDevicesFromDatabase();
     }
 
     renderAddDevice() {
-      const landingText: string = "Register a New Device:"
-      const submitText: string = "Submit"
-      const value: string = ""
+        const landingText: string = "Register a New Device:"
 
-      return (
-          <div className="registerer__adder">
-              {landingText}
-              <div className="registerer__adder">
-                <input
-                  type = "text"
-                  onChange = {this.onChange}
-                />
+        return (
+            <div className="registerer__adder">
+                {landingText}
                 <div className="registerer__adder">
-                  <button
-                            onClick={this.uploadNewDevice}
-                        >
-                          Submit
-                  </button>
+                <InputGroup 
+                    onChange={this.onChange} 
+                    rightElement={
+                        <Button onClick={this.uploadNewDevice} icon={IconNames.UPLOAD} minimal={true}/>    
+                    }
+                />
                 </div>
-              </div>
-          </div>
-      )
-  }
+            </div>
+        )
+    }
 
     render() {
         return (
