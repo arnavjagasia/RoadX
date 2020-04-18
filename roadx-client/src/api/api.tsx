@@ -156,6 +156,8 @@ export async function addDevice(params: IAddDeviceParams): Promise<boolean> {
     }).catch((reason) => {
         console.log(reason);
         return false;
+    });
+}  
 
 export async function getImage(id: string): Promise<string> {
     const formData: FormData = new FormData();
