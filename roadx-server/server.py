@@ -1,5 +1,5 @@
 import os
-from json import * 
+from json import *
 import io
 import zipfile
 import csv
@@ -184,7 +184,7 @@ def getDataByFilterSpec():
     validators.append(bool(maxLatitude is not None))
     validators.append(bool(threshold) is not None)
     validators.append(bool(defectClassificationsStr) is not None)
- 
+
     if not all(val == True for val in validators):
         return(jsonify({'ok': False, 'message': 'Bad request'}), 400)
     print("/getDataByFilterSpec: Request validation successful")
@@ -214,12 +214,35 @@ def getDataByFilterSpec():
         if utils.should_add_entry(scores, classifications_list, threshold):
             key = str(document['_id'])
             del document['_id']
-            results[key] = document 
-    
+            results[key] = document
+
     print("Results", results)
     resultString = str(results).replace('\'', '\"')
-   
+
     response = jsonify(results)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
+
+@app.route('/addDevice', methods=['POST'])
+def addDevice():
+    data = request.form
+    deviceID = data.get('deviceId', None)
+    devicesDocument = {"deviceID": deviceID}
+    mongo.db.devices.insert_one(devicesDocument)
+    response = jsonify({'ok': True})
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return (response)
+
+
+@app.route('/getDevices', methods=['GET'])
+def getDevices():
+    cursor = mongo.db.devices.find()
+    devices = []
+    for d in cursor :
+        del d['_id']
+        devices.append(d)
+
+    response=jsonify(devices)
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 

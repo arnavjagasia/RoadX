@@ -117,6 +117,46 @@ function convertJsonToRoadXRecord(key: string, json: any): RoadXRecord | null {
     return record;
 }
 
+export async function getAllDevices(): Promise<number[]> {
+    return await fetch('http://localhost:5000/getDevices', {
+        method: 'GET',
+        mode: 'cors', 
+    })
+    .then(response => response.json())
+    .then(devices => {
+        console.log('Devices', devices)
+        const deviceIds: number[] = devices.map((d: any) => Number(d['deviceID']))
+        return deviceIds;
+    })
+    .catch((reason) => {
+        console.log(reason);
+        return []
+    })
+}
+
+export interface IAddDeviceParams {
+    inputDeviceNum: string,
+    devices: number[]
+}
+
+export async function addDevice(params: IAddDeviceParams): Promise<boolean> {
+    const { inputDeviceNum, devices } = params;
+    console.log("DEVICES", devices)
+    console.log('Input device num', inputDeviceNum)
+
+    const formData: FormData = new FormData();
+    formData.append('deviceId', inputDeviceNum)
+
+    return await fetch('http://localhost:5000/addDevice', {
+        method: 'POST',
+        mode: 'cors', 
+        body: formData,
+    }).then(_ => {
+        return true;
+    }).catch((reason) => {
+        console.log(reason);
+        return false;
+
 export async function getImage(id: string): Promise<string> {
     const formData: FormData = new FormData();
     formData.append("id", String(id));
