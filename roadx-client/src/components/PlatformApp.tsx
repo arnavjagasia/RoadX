@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Navbar, NavbarGroup, Alignment, Dialog } from '@blueprintjs/core';
+import { Button, Navbar, NavbarGroup, Alignment, Dialog, isPositionHorizontal } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { FilterSpec, RoadXRecord, DataDisplayMode, LIST_MODE, MAP_MODE } from '../types/types';
 import FilterPanel from './FilterPanel';
@@ -15,6 +15,7 @@ interface IPlatformAppState {
     filters: FilterSpec,
     data: Array<RoadXRecord>
     uploaderIsOpen: boolean,
+    currentRecord: RoadXRecord | undefined
 }
 
 export default class PlatformApp extends React.Component<{}, IPlatformAppState> {
@@ -30,6 +31,7 @@ export default class PlatformApp extends React.Component<{}, IPlatformAppState> 
         },
         data: [],
         uploaderIsOpen: false,
+        currentRecord: undefined,
     }
 
     componentDidMount =  async () => {
@@ -81,7 +83,13 @@ export default class PlatformApp extends React.Component<{}, IPlatformAppState> 
     closeUploader = () => {
         this.setState({uploaderIsOpen: false});
     }
-
+    
+    viewRecordOnMap = (record: RoadXRecord) => {
+        this.setState({
+            currentRecord: record,
+            mode: MAP_MODE
+        })
+    }
     // Helper method to render the navbar at the top of the app
     renderNavbar = () => {
         return (
@@ -131,6 +139,7 @@ export default class PlatformApp extends React.Component<{}, IPlatformAppState> 
                 <MapView 
                     data={this.state.data} 
                     updateMapScope={this.updateMapScope}
+                    currentRecord={this.state.currentRecord}
                 />
             </div>
         );
@@ -138,7 +147,10 @@ export default class PlatformApp extends React.Component<{}, IPlatformAppState> 
       else{
         return(
             <div className="app__data_display">
-                <ListView data={this.state.data}/>
+                <ListView 
+                    data={this.state.data}
+                    viewRecordOnMap={this.viewRecordOnMap}
+                />
             </div>
         );
       }

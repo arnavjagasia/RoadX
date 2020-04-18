@@ -1,6 +1,6 @@
 import React from 'react';
 import { RoadXRecord } from '../types/types';
-import { Card, Button, Dialog, Collapse } from '@blueprintjs/core';
+import { Card, Button, Dialog, Collapse, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 
 import '../styles/listview.css';
@@ -8,6 +8,7 @@ import DetailView from './detailView/DetailView';
 
 interface IListViewCardProps {
     record: RoadXRecord;
+    viewOnMap: () => void;
 }
 
 interface IListViewCardState {
@@ -36,11 +37,25 @@ export default class ListViewCard extends React.Component<IListViewCardProps, IL
             <Card elevation={2} key={record.recordId} className="list_view_card__container">
                 <div className="list_view_card__header">
                     <div className="list_view_card__text">{maxClassification} discovered at ({latitude}ºE, {longitude}ºN)</div>
-                    <Button 
-                        className="list_view_card__info_button" 
-                        icon={IconNames.INFO_SIGN}
-                        onClick={this.handleOpen} 
-                    />
+                    <div className="list_view_card__buttons">
+                        <Popover
+                            boundary="viewport"
+                            content={<div className="list_view_card__button-popover">Display Defect on Map</div>} 
+                            interactionKind={PopoverInteractionKind.HOVER_TARGET_ONLY}
+                        >
+                            <Button 
+                                className="list_view_card__button" 
+                                icon={IconNames.GLOBE}
+                                onClick={this.props.viewOnMap} 
+                            />
+                        </Popover>
+                        <Button 
+                            className="list_view_card__button" 
+                            icon={IconNames.INFO_SIGN}
+                            onClick={this.handleOpen} 
+                        />
+                    </div>
+                    
                 </div>
                 <Collapse 
                     className="list_view_card__collapse"

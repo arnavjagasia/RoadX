@@ -17,11 +17,19 @@
     justify-content: space-between;
 }
 
-.list_view_card__info_button {
+.list_view_card__buttons {
     display: flex;
-    padding-left: 0;
-    padding-right: 0;
     flex-flow: row;
+}
+
+.list_view_card__button {
+    display: flex;
+    flex-flow: row;
+    margin-right: 1em;
+}
+
+.list_view_card__button-popover {
+    margin: 1em;
 }
 
 .list_view_card__text {
