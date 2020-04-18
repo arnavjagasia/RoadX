@@ -139,20 +139,23 @@ def analyzeImage():
                 scores.append(output)
         classifiedImage = Image.fromarray(results_dict[filename]['classifiedImage'])
         print("/analyze: Score = ", scores)
-        # Update mongo document about this image with classification results
-        classified_filename = filename + "-classified"
-        mongo.db.images.update_one(
-            {'imageFileName': filename},
-            {'$set':{
-                'classifiedImageFileName': classified_filename,
-                'scores': scores
-            }}
-        )
-
-        # Save the new image
-        output = io.BytesIO()
-        classifiedImage.save(output, format=original_format)
-        storage.put(output.getvalue(), filename=classified_filename, content_type="image/png")
+        if len(scores) == 0:
+            print("Removing")
+            mongo.db.images.remove({ 'imageFileName': { '$eq': filename }})
+        else:
+            # Update mongo document about this image with classification results
+            classified_filename = filename + "-classified"
+            mongo.db.images.update_one(
+                {'imageFileName': filename},
+                {'$set':{
+                    'classifiedImageFileName': classified_filename,
+                    'scores': scores
+                }}
+            )
+            # Save the new image
+            output = io.BytesIO()
+            classifiedImage.save(output, format=original_format)
+            storage.put(output.getvalue(), filename=classified_filename, content_type="image/png")
 
     if all(score is not None for score in scores):
         response = {'status': 200, 'ok': True}
