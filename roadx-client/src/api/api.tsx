@@ -156,5 +156,21 @@ export async function addDevice(params: IAddDeviceParams): Promise<boolean> {
     }).catch((reason) => {
         console.log(reason);
         return false;
+
+export async function getImage(id: string): Promise<string> {
+    const formData: FormData = new FormData();
+    formData.append("id", String(id));
+    console.log("HERE")
+    return await fetch('http://localhost:5000/getImage', {
+        method: 'POST',
+        mode: 'cors', // cannot pass headers with no-cors
+        body: formData,
+        headers: {
+           'Accept': 'img/png'
+        }
+    }).then(response => response.blob())
+    .then(image => {
+        const urlCreator = window.URL || window.webkitURL;
+        return urlCreator.createObjectURL(image)
     })
 }

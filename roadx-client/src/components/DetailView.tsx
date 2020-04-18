@@ -1,16 +1,30 @@
 import React from 'react';
 import { RoadXRecord } from '../types/types';
+import { getImage } from '../api/api';
 
 interface IDetailViewProps {
     record: RoadXRecord;
 }
 
+interface IDetailViewState {
+    imageUrl: string | undefined;
+}
+
 export default class DetailView extends React.Component<IDetailViewProps, {}> {
+    state: IDetailViewState = {
+        imageUrl: undefined
+    }
+
+    componentDidMount = async () => {
+        console.log("YOO")
+        const { record } = this.props;
+        const imageUrl: string = await getImage(record.recordId);
+        this.setState({
+            imageUrl: imageUrl,
+        })
+    }
     render() {
         const { record } = this.props;
-        const urlCreator = window.URL || window.webkitURL;
-        const imageUrl = record.image ? urlCreator.createObjectURL(record.image): "";
-
         return(
             <div key={record.recordId} className="list_view_card__dialog-text">
                 <h3><strong> Defect Details </strong></h3>
@@ -25,7 +39,7 @@ export default class DetailView extends React.Component<IDetailViewProps, {}> {
                 })}
                 
                 <h3><strong> Image </strong></h3>
-                <img src={imageUrl} alt={"Road Defect"}/>
+                <img className="list_view_card__image" src={this.state.imageUrl} alt={"Road Defect"}/>
             </div>
         );
     }
