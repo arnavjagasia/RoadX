@@ -23,3 +23,12 @@
     padding: 1em;
     width: 100%;
 }
+
+.registerer__adder {
+    display: flex;
+    flex-flow: row;
+    margin-left: 5px;
+    justify-content: center;
+    color: #293742;
+    align-items: center;
+}
