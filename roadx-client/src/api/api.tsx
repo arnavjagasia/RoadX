@@ -1,6 +1,6 @@
 // File for API Calls
 
-import { FilterSpec, RoadXRecord, ScoredClassification } from "../types/types";
+import { FilterSpec, RoadXRecord, ScoredClassification, DefectClassification } from "../types/types";
 // /create
 export interface ICreateParams {
     timestamp: string, 
@@ -90,11 +90,12 @@ export async function getDataByFilterSpec(f: FilterSpec) {
     })
 }
 
-function convertJsonToRoadXRecord(key: string, json: any): RoadXRecord | null {
+function convertJsonToRoadXRecord(key: string, json: {[key: string]: any}): RoadXRecord | null {
     const classificationsAndScores: string[] = json['scores']
     if (classificationsAndScores.length === 0) {
         return null
     }
+    
     const defectClassifications: ScoredClassification[] = classificationsAndScores.map(c => {
         const classification: string = c.split(": ")[0]
         const threshold: string = c.split(": ")[1].replace("%", "")
@@ -112,6 +113,10 @@ function convertJsonToRoadXRecord(key: string, json: any): RoadXRecord | null {
         uploadTime: json['uploadTime'],
         image: undefined,
         recordId: key,
+    }
+
+    if ('override' in json) {
+        record.override = json['override']
     }
 
     return record;
@@ -132,5 +137,28 @@ export async function getImage(id: string): Promise<string> {
     .then(image => {
         const urlCreator = window.URL || window.webkitURL;
         return urlCreator.createObjectURL(image)
+    })
+}
+
+export interface ISubmitOverrideParams {
+    id: string,
+    classificationOverride: DefectClassification
+}
+
+export async function submitOverride(params: ISubmitOverrideParams): Promise<boolean> {
+    const formData: FormData = new FormData();
+    formData.append("id", String(params.id));
+    formData.append("classificationOverride", String(params.classificationOverride));
+    return await fetch('http://localhost:5000/submitOverride', {
+        method: 'POST',
+        mode: 'cors',
+        body: formData
+    }).then(response => {
+        response.json()
+        return true;
+    })
+    .catch(reason => {
+        console.log(reason)
+        return false;
     })
 }

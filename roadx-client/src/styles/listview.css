@@ -7,9 +7,14 @@
 
 .list_view_card__container {
     display: flex;
+    flex-flow: column;
+    margin: 1em;
+}
+
+.list_view_card__header {
+    display: flex;
     flex-flow: row;
     justify-content: space-between;
-    margin: 1em;
 }
 
 .list_view_card__info_button {
@@ -25,11 +30,8 @@
     padding-right: 0;
     flex-flow: column;
     justify-content: center;
-    text-size: 1em;
-}
-
-.list_view_card__dialog-text {
-    margin: 1em;
+    font-size: 1.1em;
+    font-weight: bold;
 }
 
 .list_view_card__image {

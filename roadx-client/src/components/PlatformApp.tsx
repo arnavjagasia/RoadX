@@ -85,7 +85,7 @@ export default class PlatformApp extends React.Component<{}, IPlatformAppState> 
     // Helper method to render the navbar at the top of the app
     renderNavbar = () => {
         return (
-            <Navbar>
+            <Navbar className="app__nav">
                 <NavbarGroup align={Alignment.LEFT}>
                     <Navbar.Heading className="app__navbar-text">RoadX Analysis Platform</Navbar.Heading>
                 </NavbarGroup>

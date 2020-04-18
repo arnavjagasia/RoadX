@@ -1,0 +1,27 @@
+.detail_view__container {
+    display: flex;
+    flex-flow: row;
+}
+
+.detail_view__content-left {
+    display: flex;
+    flex-flow: column;
+    flex: 1;
+}
+
+.detail_view__callout {
+    display: flex;
+    flex-flow: column;
+    margin-right: 2em;
+    margin-top: 1em;
+}
+
+.detail_view__content-right {
+    display: flex;
+    flex-flow: column;
+    flex: 1
+}
+
+.detail_view__text-strikethrough {
+    text-decoration: line-through;
+}

@@ -3,7 +3,7 @@ import InteractiveMap, { Marker, Popup } from "react-map-gl";
 import { NavigationControl, FullscreenControl } from 'react-map-gl';
 
 import { RoadXRecord } from '../types/types';
-import DetailView from "./DetailView";
+import DetailView from "./detailView/DetailView";
 
 import '../styles/map.css';
 import { Button } from "@blueprintjs/core";
@@ -109,7 +109,6 @@ export default class Map extends React.Component<IMapProps, IMapState> {
                 {this.showPopUp()}
 
 				{this.props.data.map(record => {
-					console.log(record)
 					return(
                     <Marker
                         key={record.recordId}

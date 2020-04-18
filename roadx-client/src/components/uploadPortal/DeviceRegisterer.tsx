@@ -14,7 +14,7 @@ const DeviceSelector = Select.ofType<Number>();
 
 // Hard-coding device id's for now
 const devices: number[] = [1, 2, 4, 10, 50, 67]
-export const renderDevice: ItemRenderer<Number> = (deviceId, { handleClick, modifiers, query }) => {
+const renderDevice: ItemRenderer<Number> = (deviceId, { handleClick, modifiers, query }) => {
     const text = `Device #${deviceId}`;
     return (
         <MenuItem

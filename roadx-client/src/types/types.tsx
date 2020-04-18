@@ -6,7 +6,8 @@ export const POTHOLE: DefectClassification = "Pothole";
 export const LONGITUDINAL_CRACK: DefectClassification = "Longitudinal Crack";
 export const LATERAL_CRACK: DefectClassification = "Lateral Crack";
 export const ALLIGATOR_CRACK: DefectClassification = "Alligator Crack";
-export const ALL_DEFECTS: Array<DefectClassification> = [POTHOLE, LONGITUDINAL_CRACK, LATERAL_CRACK, ALLIGATOR_CRACK]
+export const WHEEL_MARK_CRACK: DefectClassification = "Wheel Mark Crack";
+export const ALL_DEFECTS: Array<DefectClassification> = [POTHOLE, LONGITUDINAL_CRACK, LATERAL_CRACK, ALLIGATOR_CRACK, WHEEL_MARK_CRACK]
 
 export interface ScoredClassification {
     classification: DefectClassification;
@@ -21,6 +22,7 @@ export interface RoadXRecord {
     uploadTime: string,
     image: Blob,
     recordId: string,
+    override?: DefectClassification
 }
 
 // Filter Types
