@@ -1,6 +1,6 @@
 import React from 'react';
 import { RoadXRecord } from '../types/types';
-import { Card, Button, Dialog, Collapse, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
+import { Card, Button, Dialog, Collapse, Popover, PopoverInteractionKind, Position, Tooltip } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 
 import '../styles/listview.css';
@@ -38,9 +38,9 @@ export default class ListViewCard extends React.Component<IListViewCardProps, IL
                 <div className="list_view_card__header">
                     <div className="list_view_card__text">{maxClassification} discovered at ({latitude}ºE, {longitude}ºN)</div>
                     <div className="list_view_card__buttons">
-                        <Popover
+                        <Tooltip
                             boundary="viewport"
-                            content={<div className="list_view_card__button-popover">Display Defect on Map</div>} 
+                            content={<div>Display Defect on Map</div>} 
                             interactionKind={PopoverInteractionKind.HOVER_TARGET_ONLY}
                         >
                             <Button 
@@ -48,12 +48,18 @@ export default class ListViewCard extends React.Component<IListViewCardProps, IL
                                 icon={IconNames.GLOBE}
                                 onClick={this.props.viewOnMap} 
                             />
-                        </Popover>
-                        <Button 
-                            className="list_view_card__button" 
-                            icon={IconNames.INFO_SIGN}
-                            onClick={this.handleOpen} 
-                        />
+                        </Tooltip>
+                        <Tooltip
+                            boundary="viewport"
+                            content={<div>Click for more info</div>} 
+                            interactionKind={PopoverInteractionKind.HOVER_TARGET_ONLY}
+                        >
+                            <Button 
+                                className="list_view_card__button" 
+                                icon={IconNames.INFO_SIGN}
+                                onClick={this.handleOpen} 
+                            />
+                        </Tooltip>
                     </div>
                     
                 </div>
