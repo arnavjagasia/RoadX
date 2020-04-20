@@ -10,7 +10,16 @@
 }
 
 .app__nav {
-    max-height: 6vh;
+    max-height: 50px;
+    min-height: 50px;
+}
+
+.app__nav-text {
+    font-size: 1.5em;
+}
+
+.app__nav-button {
+    margin-left: 1em;
 }
 
 .app__contents {
@@ -21,9 +30,7 @@
     max-height: 94vh;
 }
 
-.app__navbar-text {
-    font-size: 1.5em;
-}
+
 
 .app__filter_panel {
     display: flex;
