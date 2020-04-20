@@ -1,6 +1,6 @@
 import React from 'react';
 import { RoadXRecord } from '../types/types';
-import { Card, Button, Dialog, Collapse, Popover, PopoverInteractionKind, Position, Tooltip } from '@blueprintjs/core';
+import { Card, Button, Collapse, PopoverInteractionKind, Tooltip } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 
 import '../styles/listview.css';

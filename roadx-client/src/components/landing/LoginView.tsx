@@ -67,7 +67,7 @@ export default class LoginView extends React.Component<ILoginViewProps, ILoginVi
                 />
                 <InputGroup
                     className="login_view__entry"
-                    placeholder="password"
+                    placeholder="Password"
                     type="password"
                     leftIcon={IconNames.LOCK}
                     onChange={this.addPassword}

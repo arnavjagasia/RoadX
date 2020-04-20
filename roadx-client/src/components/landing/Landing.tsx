@@ -13,7 +13,7 @@ export default class Landing extends React.Component<ILandingProps, {}> {
         return (
             <div className="landing__contents">
                 <div className="landing__logo"> 
-                    <div className="landing__logo-text"> Road X</div>
+                    <div className="landing__logo-text"> RoadX</div>
                 </div>
                 <div className="landing__login_view">
                     <LoginView submitUsernamePassword={submitUsernamePassword}/>

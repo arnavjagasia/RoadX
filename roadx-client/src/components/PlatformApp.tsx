@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Navbar, NavbarGroup, Alignment, Dialog, isPositionHorizontal } from '@blueprintjs/core';
+import { Button, Navbar, NavbarGroup, Alignment, Dialog } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { FilterSpec, RoadXRecord, DataDisplayMode, LIST_MODE, MAP_MODE } from '../types/types';
 import FilterPanel from './FilterPanel';
