@@ -1,5 +1,5 @@
 import React from 'react';
-import { RoadXRecord, POTHOLE, LATERAL_CRACK, ALLIGATOR_CRACK } from '../types/types';
+import { RoadXRecord } from '../types/types';
 import ListViewCard from './ListViewCard';
 
 interface IListViewProps {

@@ -3,7 +3,7 @@ import { RoadXRecord } from '../../types/types';
 import { getImage } from '../../api/api';
 
 import '../../styles/detailview.css';
-import { Callout, InputGroup } from '@blueprintjs/core';
+import { Callout } from '@blueprintjs/core';
 import Classifier from './Classifier';
 
 interface IDetailViewProps {
@@ -39,7 +39,7 @@ export default class DetailView extends React.Component<IDetailViewProps, {}> {
         }
 
         const classname: string = override ? "detail_view__text-strikethrough" : "";
-        record.defectClassifications.map(defect => {
+        record.defectClassifications.forEach(defect => {
             const key: string = defect.classification + ":" + defect.threshold;
             classifications.push(<p key={key} className={classname}>{defect.classification}: {defect.threshold}</p>)
         })

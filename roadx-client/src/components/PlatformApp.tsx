@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Navbar, NavbarGroup, Alignment, Dialog, isPositionHorizontal } from '@blueprintjs/core';
+import { Button, Navbar, NavbarGroup, Alignment, Dialog } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { FilterSpec, RoadXRecord, DataDisplayMode, LIST_MODE, MAP_MODE } from '../types/types';
 import FilterPanel from './FilterPanel';
@@ -10,6 +10,10 @@ import Uploader from './uploadPortal/Uploader';
 import "../styles/platformapp.css";
 import { getDataByFilterSpec } from '../api/api';
 
+interface IPlatformAppProps {
+    logout: () => void;
+}
+
 interface IPlatformAppState {
     mode: DataDisplayMode,
     filters: FilterSpec,
@@ -18,7 +22,7 @@ interface IPlatformAppState {
     currentRecord: RoadXRecord | undefined
 }
 
-export default class PlatformApp extends React.Component<{}, IPlatformAppState> {
+export default class PlatformApp extends React.Component<IPlatformAppProps, IPlatformAppState> {
     state: IPlatformAppState = {
         mode: LIST_MODE,
         filters: {
@@ -95,14 +99,22 @@ export default class PlatformApp extends React.Component<{}, IPlatformAppState> 
         return (
             <Navbar className="app__nav">
                 <NavbarGroup align={Alignment.LEFT}>
-                    <Navbar.Heading className="app__navbar-text">RoadX Analysis Platform</Navbar.Heading>
+                    <Navbar.Heading className="app__nav-text">RoadX Analysis Platform</Navbar.Heading>
                 </NavbarGroup>
                 <NavbarGroup align={Alignment.RIGHT}>
                     <Button
+                        className="app__nav-button"
                         minimal={false}
                         text="Upload New Data"
-                        icon={IconNames.UPLOAD}
+                        icon={IconNames.CLOUD_UPLOAD}
                         onClick={this.openUploader}
+                    />
+                    <Button
+                        className="app__nav-button"
+                        minimal={false}
+                        text="Logout"
+                        icon={IconNames.LOG_OUT}
+                        onClick={this.props.logout}
                     />
                     <Dialog
                         icon={IconNames.UPLOAD}

@@ -1,0 +1,59 @@
+.landing__contents {
+    height: 100vh;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    background: #30404D;
+}
+
+.landing__logo {
+    display: flex;
+    flex-flow: column;
+    justify-content: flex-end;
+    flex: 2;
+    padding: 1em;
+}
+
+.landing__logo-text {
+    display: flex;
+    font-size: 5em;
+    color: #E1E8ED;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.landing__logo-footer {
+    display: flex;
+    flex-flow: column;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin: 1em;
+    color: #E1E8ED;
+    align-items: center;
+}
+
+.landing__login_view {
+    display: flex;
+    flex-flow: column;
+    flex: 3;
+}
+
+.login_view__container {
+    display: flex;
+    flex-flow: column;
+    color: #E1E8ED;
+}
+
+.login_view__entry {
+    display: flex;
+    margin: 1em;
+}
+
+.login_view__button {
+    display: flex;
+    margin: 1em;
+    justify-content: center;
+}
