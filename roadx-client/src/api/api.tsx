@@ -82,7 +82,16 @@ export async function getDataByFilterSpec(f: FilterSpec) {
             }
             
         }
-        return records
+        const sortedRecords: Array<RoadXRecord> = records.sort((a: RoadXRecord, b: RoadXRecord) => {
+            if (a.detectionTime > b.detectionTime) {
+                return -1
+            } else if (a.detectionTime < b.detectionTime) {
+                return -1
+            } else {
+                return Number(a.defectClassifications > b.defectClassifications);
+            }
+        })
+        return sortedRecords
     })
     .catch(err => {
         console.log(err)
@@ -109,7 +118,7 @@ function convertJsonToRoadXRecord(key: string, json: {[key: string]: any}): Road
         latitude: json['latitude'],
         longitude: json['longitude'],
         defectClassifications: defectClassifications,
-        detectionTime: json['timestamp'],
+        detectionTime: convertDiscoveryTimeToDate(json['timestamp']),
         uploadTime: json['uploadTime'],
         image: undefined,
         recordId: key,
@@ -203,4 +212,19 @@ export async function submitOverride(params: ISubmitOverrideParams): Promise<boo
         console.log(reason)
         return false;
     })
+}
+
+export const convertDiscoveryTimeToDate = (discoveryTime: string) => {
+    const timeString: string = discoveryTime.substring(0, discoveryTime.length - 4); // Remove extension
+    const year: number = Number(timeString.substring(0, 4));
+    const month: number = Number(timeString.substring(4, 6));
+    const date: number = Number(timeString.substring(6, 8));
+    const hour: number = Number(timeString.substring(8, 10));
+    const minute: number = Number(timeString.substring(10, 12));
+    const second: number = Number(timeString.substring(12, 14));
+
+    const d = new Date();
+    d.setFullYear(year, month, date);
+    d.setHours(hour, minute, second);
+    return d;
 }

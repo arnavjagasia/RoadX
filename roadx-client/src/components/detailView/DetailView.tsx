@@ -51,13 +51,14 @@ export default class DetailView extends React.Component<IDetailViewProps, {}> {
         const { record } = this.props;
         const longitude: string = String(record.longitude).substring(0, 6);
         const latitude: string = String(record.latitude).substring(0, 5);
+        const discoveryTime: string = record.detectionTime.toLocaleString();
         return(
             <div key={record.recordId} className="detail_view__container">
                 <div className="detail_view__content-left">
                     <div className={"detail_view__callout"}>
                         <Callout title={"Defect Details"}>
                             <p><strong>Location:</strong> ({latitude}ºE, {longitude}ºN)</p>
-                            <p><strong>Discovery Time:</strong> {record.detectionTime}</p>
+                            <p><strong>Discovery Time:</strong> {discoveryTime}</p>
                             <p><strong>Upload Time:</strong> {record.uploadTime}</p>
                         </Callout>
                     </div>
