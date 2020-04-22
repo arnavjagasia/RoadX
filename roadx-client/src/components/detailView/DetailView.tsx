@@ -3,8 +3,9 @@ import { RoadXRecord } from '../../types/types';
 import { getImage } from '../../api/api';
 
 import '../../styles/detailview.css';
-import { Callout } from '@blueprintjs/core';
+import { Callout, Tooltip, Icon, PopoverInteractionKind } from '@blueprintjs/core';
 import Classifier from './Classifier';
+import { IconNames } from '@blueprintjs/icons';
 
 interface IDetailViewProps {
     record: RoadXRecord;
@@ -40,8 +41,8 @@ export default class DetailView extends React.Component<IDetailViewProps, {}> {
 
         const classname: string = override ? "detail_view__text-strikethrough" : "";
         record.defectClassifications.forEach(defect => {
-            const key: string = defect.classification + ":" + defect.threshold;
-            classifications.push(<p key={key} className={classname}>{defect.classification}: {defect.threshold}</p>)
+            const classificationString: string = defect.classification + ": " + defect.threshold + "% Confidence";
+            classifications.push(<p key={classificationString}>{classificationString}</p>)
         })
 
         return <div> {classifications} </div>
@@ -64,7 +65,21 @@ export default class DetailView extends React.Component<IDetailViewProps, {}> {
                     </div>
                     <div className={"detail_view__callout"}>
                         <Callout title={"Automated Classification Details"}>
-                            {this.renderClassifications()}
+                            <div className={"detail_view__callout-classifications-content"}>
+                            <div className={"detail_view__callout-classifications-content--text"}>
+                                {this.renderClassifications()}
+                            </div>
+                            <div className={"detail_view__callout-classifications-content--tooltip-container"}> 
+                                <Tooltip
+                                    content={<div className={"detail_view__callout-classifications-content--tooltip"}>
+                                        RoadX's automated discovery classification model identifies the likelihood of a defects in an image from the RoadX device. To filter by  confidence threshold, Use the toolbar on the left.
+                                    </div>} 
+                                    interactionKind={PopoverInteractionKind.HOVER_TARGET_ONLY}
+                                >
+                                    <Icon icon={IconNames.INFO_SIGN}/>
+                                </Tooltip>
+                            </div>
+                            </div>
                         </Callout>
                     </div>
                     <div className={"detail_view__callout"}>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Select, ItemRenderer } from '@blueprintjs/select';
 import { DefectClassification, ALL_DEFECTS, RoadXRecord } from '../../types/types';
-import { MenuItem, Button, Toaster, Position, Intent } from '@blueprintjs/core';
+import { MenuItem, Button, Toaster, Position, Intent, Icon, Tooltip, PopoverInteractionKind } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 
 import '../../styles/classifier.css';
@@ -92,6 +92,15 @@ export default class Classifier extends React.Component<IClassifierProps, IClass
             <div className="classifier__container">
                 {this.renderClassificationSelector()}  
                 {this.renderOverrideButton()}
+                <Tooltip
+                        className={"classifier__tooltip"}
+                        content={<div className={"classifier__tooltip-content"}>
+                            If the model's defect classification does not seem correct, use this menu to submit a manual override.
+                        </div>} 
+                        interactionKind={PopoverInteractionKind.HOVER_TARGET_ONLY}
+                    >
+                        <Icon icon={IconNames.INFO_SIGN}/>
+                    </Tooltip>
             </div>
         );
     }

@@ -10,3 +10,15 @@
 .classifier__button {
     margin: 1em;
 }
+
+.classifier__tooltip {
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 1;
+}
+
+.classifier__tooltip-content {
+    max-width: 200px;
+}
