@@ -59,8 +59,9 @@ export default class DetailView extends React.Component<IDetailViewProps, {}> {
                     <div className={"detail_view__callout"}>
                         <Callout title={"Defect Details"}>
                             <p><strong>Location:</strong> ({latitude}ºE, {longitude}ºN)</p>
-                            <p><strong>Discovery Time:</strong> {discoveryTime}</p>
-                            <p><strong>Upload Time:</strong> {record.uploadTime}</p>
+                            <p>This image was taken at {record.uploadTime}</p>
+                            <p>The defect was discovered at {discoveryTime}</p>
+                            
                         </Callout>
                     </div>
                     <div className={"detail_view__callout"}>

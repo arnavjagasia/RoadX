@@ -102,6 +102,13 @@ export default class PlatformApp extends React.Component<IPlatformAppProps, IPla
                     <Navbar.Heading className="app__nav-text">RoadX Analysis Platform</Navbar.Heading>
                 </NavbarGroup>
                 <NavbarGroup align={Alignment.RIGHT}>
+                    <Button 
+                        className="app__nav-button"
+                        minimal={false}
+                        text="Refresh"
+                        icon={IconNames.REFRESH}
+                        onClick={() => this.updateFilters(this.state.filters)}
+                    />
                     <Button
                         className="app__nav-button"
                         minimal={false}

@@ -159,11 +159,13 @@ def analyzeImage():
             storage.put(output.getvalue(), filename=classified_filename, content_type="image/png")
 
     if all(score is not None for score in scores):
-        response = {'status': 200, 'ok': True}
-        return (jsonify(response), 200)
+        response = jsonify({'status': 200, 'ok': True})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
     else:
-        response = {'ok': False, 'message': 'Internal Error in classification model'}
-        return (jsonify(response), 500)
+        response = jsonify({'ok': False, 'message': 'Internal Error in classification model'})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
 
 @app.route('/getDataByFilterSpec', methods=['POST'])
 def getDataByFilterSpec():
