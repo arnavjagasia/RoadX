@@ -9,9 +9,9 @@ def convertGpsCsvToDict(gpsCsv):
         result[timestamp] = (longitude, latitude)
     return result
         
-def should_add_entry(scores, classifications_list, threshold):
+def should_add_entry(scores, classifications_list, threshold, override=None):
     for entry in scores:
-        classification = entry.split(": ")[0]
+        classification = entry.split(": ")[0] if override == None else override
         score = entry.split(": ")[1][0:-1] # Remove percent sign from score
         inClass = len(classifications_list) == 0 or classification.lower() in classifications_list 
         if inClass and int(score) >= int(threshold):

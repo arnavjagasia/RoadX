@@ -31,12 +31,12 @@ export default class ListViewCard extends React.Component<IListViewCardProps, IL
         const maxClassification: string = record.override ? record.override: record.defectClassifications[0].classification;
         const longitude: string = String(record.longitude).substring(0, 6);
         const latitude: string = String(record.latitude).substring(0, 5);
-        // document.querySelector("#image").src = imageUrl;
+        const discoveryTime: string = record.detectionTime.toLocaleDateString();
 
         return(
             <Card elevation={2} key={record.recordId} className="list_view_card__container">
                 <div className="list_view_card__header">
-                    <div className="list_view_card__text">{maxClassification} discovered at ({latitude}ºE, {longitude}ºN)</div>
+                    <div className="list_view_card__text">{maxClassification} discovered on {discoveryTime} at ({latitude}ºE, {longitude}ºN)</div>
                     <div className="list_view_card__buttons">
                         <Tooltip
                             boundary="viewport"

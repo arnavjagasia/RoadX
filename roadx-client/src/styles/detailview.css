@@ -11,9 +11,31 @@
 
 .detail_view__callout {
     display: flex;
-    flex-flow: column;
+    flex-flow: row;
     margin-right: 2em;
     margin-top: 1em;
+}
+
+.detail_view__callout-classifications-content {
+    display: flex;
+    flex-flow: row;
+}
+
+.detail_view__callout-classifications-content--text {
+    display: flex;
+    flex-flow: column;
+    flex: 3
+}
+
+.detail_view__callout-classifications-content--tooltip-container {
+    display: flex;
+    flex-flow: column;
+    align-items: flex-end;
+    flex: 1;
+}
+
+.detail_view__callout-classifications-content--tooltip {
+    max-width: 200px;
 }
 
 .detail_view__content-right {

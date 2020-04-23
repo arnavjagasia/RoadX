@@ -28,7 +28,7 @@ const UPLOADING_MODE: UploaderMode = "Uploading";
 
 interface IUploaderState {
     uploaderState: UploaderState;
-    uploadTime: Date;
+    uploadTime: string;
     userId?: number;
     deviceId?: number | undefined;
     imageFile?: File;
@@ -40,7 +40,7 @@ export default class Uploader extends React.Component<{}, IUploaderState> {
     // Initialize state when component mounts
     state: IUploaderState = {
         uploaderState: DEVICE_SELECTOR_STATE,
-        uploadTime: new Date(),
+        uploadTime: new Date().toLocaleString(),
         deviceId: undefined,
         userId: undefined,
         imageFile: undefined,

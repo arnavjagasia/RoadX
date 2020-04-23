@@ -18,7 +18,7 @@ export interface RoadXRecord {
     latitude: number,
     longitude: number,
     defectClassifications: Array<ScoredClassification>,
-    detectionTime: string,
+    detectionTime: Date,
     uploadTime: string,
     image: Blob,
     recordId: string,

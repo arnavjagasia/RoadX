@@ -190,10 +190,6 @@ def getDataByFilterSpec():
     print("/getDataByFilterSpec: Request validation successful")
 
     # Get everything from DB in range
-    print(minLongitude)
-    print(maxLongitude)
-    print(minLatitude)
-    print(maxLatitude)
     cursor =  mongo.db.images.find({'$and': [
         {'longitude': {'$lt': float(maxLatitude), '$gt': float(minLongitude)}},
         {'latitude': {'$lt': float(maxLatitude), '$gt': float(minLatitude)}},
@@ -209,12 +205,11 @@ def getDataByFilterSpec():
     results = {}
     for document in cursor:
         scores = document['scores']
-        if utils.should_add_entry(scores, classifications_list, threshold):
+        override = document['override'] if 'override' in document else None
+        if utils.should_add_entry(scores, classifications_list, threshold, override):
             key = str(document['_id'])
             del document['_id']
             results[key] = document 
-            
-    resultString = str(results).replace('\'', '\"')
 
     response = jsonify(results)
     response.headers.add('Access-Control-Allow-Origin', '*')
