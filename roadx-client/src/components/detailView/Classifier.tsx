@@ -64,7 +64,7 @@ export default class Classifier extends React.Component<IClassifierProps, IClass
         return (
             <div className={"classifier__selector"}>
                 <ClassificationSelector
-                    items={ALL_DEFECTS}
+                    items={["None", ...ALL_DEFECTS]}
                     itemRenderer={this.renderClassification}
                     onItemSelect={this.handleSelectOverride}
                 >
