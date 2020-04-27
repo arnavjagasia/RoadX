@@ -5,7 +5,7 @@ Road inspection is a crucial responsibility for city governments, and efficient 
 
 RoadX is a Senior Design project (CIS400/CIS401) for the Department of Computer Science at the University of Pennsylvania. The RoadX Team consists of Mei Chung, Arnav Jagasia, Adele Li, Mark Lewis, and Jeffrey Zhou.
 
-A demo of the RoadX Project can be found at [www.tinyurl.com/roadxvideo](www.tinyurl.com/roadxvideo) (or at its [permanent address](https://www.youtube.com/watch?v=KZLVirky-Ag&feature=youtu.be)).
+A demo of the RoadX Project can be found at [www.tinyurl.com/roadxvideo](https://www.tinyurl.com/roadxvideo) (or at its [permanent address](https://www.youtube.com/watch?v=KZLVirky-Ag&feature=youtu.be)).
 
 ## Repository Structure
 This repository contains the code for the RoadX Platform. The front-end of the RoadX Platform is written in Typescript with the React framework, and the front-end code can be found in the the `roadx-client` directory. The back-end of the RoadX Platform is built with a Flask Server written in Python, and the code for the backend-server can be found in the `roadx-server` directory. We store the images and data in MongoDB Atlas with a GridFS filesystem to help with storing the images.
