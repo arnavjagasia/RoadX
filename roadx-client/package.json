@@ -24,7 +24,7 @@
         "react-dom": "^16.12.0",
         "react-dropzone": "^10.2.1",
         "react-map-gl": "^5.2.3",
-        "react-scripts": "3.3.0",
+        "react-scripts": "5.0.1",
         "tslint": "^6.0.0",
         "typescript": "~3.7.2",
         "yarn-install": "^1.0.0"
